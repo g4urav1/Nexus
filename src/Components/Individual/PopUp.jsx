@@ -10,7 +10,7 @@ export default function Popup() {
       {ShowPopUp && (
         <div
           onClick={(e) => e.stopPropagation()}
-          className="bg-[#0F172A] fixed z-50 text-[#753CEC] bottom-10 left-1/2 -translate-x-1/2 p-6 rounded-xl shadow-xl min-w-[300px] flex flex-col items-center"
+          className="bg-nexus-surface fixed z-50 text-nexus-primary bottom-10 left-1/2 -translate-x-1/2 p-6 rounded-xl shadow-xl min-w-[300px] flex flex-col items-center"
         >
           <p className="text-center">{popUpMsg}</p>
         </div>

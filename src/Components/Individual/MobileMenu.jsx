@@ -1,20 +1,20 @@
 import { useContext } from "react";
 import { NavLink } from "react-router-dom";
-import { AdminContext } from "../context/context";
+import { AdminContext, ThemeContext } from "../context/context";
 
 export default function MobileMenu() {
   const { admin } = useContext(AdminContext);
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-t border-slate-200/80 dark:border-slate-800/80 px-6 py-4 flex justify-around items-center z-50 ">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-nexus-surface/90 backdrop-blur-md border-t border-nexus-border px-6 py-4 flex justify-around items-center z-50 ">
       <NavLink
         to="/"
         end // Optional: Ensures exact matching for root path "/"
         className={({ isActive }) =>
           `flex flex-col items-center space-y-1 transition ${
             isActive
-              ? "text-indigo-600 dark:text-indigo-400 font-semibold"
-              : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+              ? "text-nexus-primary font-semibold"
+              : "text-nexus-text-muted hover:text-nexus-text-secondary"
           }`
         }
       >
@@ -37,8 +37,8 @@ export default function MobileMenu() {
         className={({ isActive }) =>
           `flex flex-col items-center space-y-1 transition ${
             isActive
-              ? "text-indigo-600 dark:text-indigo-400 font-semibold"
-              : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+              ? "text-nexus-primary font-semibold"
+              : "text-nexus-text-muted hover:text-nexus-text-secondary"
           }`
         }
       >
@@ -60,8 +60,8 @@ export default function MobileMenu() {
         className={({ isActive }) =>
           `flex flex-col items-center space-y-1 transition ${
             isActive
-              ? "text-indigo-600 dark:text-indigo-400 font-semibold"
-              : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+              ? "text-nexus-primary font-semibold"
+              : "text-nexus-text-muted hover:text-nexus-text-secondary"
           }`
         }
       >
@@ -83,8 +83,8 @@ export default function MobileMenu() {
         className={({ isActive }) =>
           `flex flex-col items-center space-y-1 transition ${
             isActive
-              ? "text-indigo-600 dark:text-indigo-400 font-semibold"
-              : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+              ? "text-nexus-primary font-semibold"
+              : "text-nexus-text-muted hover:text-nexus-text-secondary"
           }`
         }
       >
@@ -109,8 +109,8 @@ export default function MobileMenu() {
         className={({ isActive }) =>
           `flex flex-col items-center space-y-1 transition ${
             isActive
-              ? "text-indigo-600 dark:text-indigo-400 font-semibold"
-              : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+              ? "text-nexus-primary font-semibold"
+              : "text-nexus-text-muted hover:text-nexus-text-secondary"
           }`
         }
       >

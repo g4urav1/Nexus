@@ -26,6 +26,7 @@ import {
   ReceiverContext,
   CurrentCallContext,
   PeerContext,
+  ThemeContext,
 } from "./Components/context/context";
 import NotificationPage from "./Components/Pages/Notification";
 import FollowersPage from "./Components/Pages/Followers";
@@ -53,6 +54,15 @@ export default function App() {
   const [peerId, setPeerId] = useState("");
   const [remotePeerId, setRemotePeerId] = useState("");
   const [remoteStream, setRemoteStream] = useState(null);
+
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem("darkMode") === "true";
+  });
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", darkMode);
+    localStorage.setItem("darkMode", darkMode);
+  }, [darkMode]);
 
   useEffect(() => {
     (() => {
@@ -240,7 +250,9 @@ export default function App() {
                 <PopUpContext.Provider value={{ ShowPopUp, setShowPopUp }}>
                   <UserPostContext.Provider value={{ UserPosts, setUserPosts }}>
                     <AdminContext.Provider value={{ admin, setAdmin }}>
-                      <RouterProvider router={router} />
+                      <ThemeContext.Provider value={{ darkMode, setDarkMode }}>
+                        <RouterProvider router={router} />
+                      </ThemeContext.Provider>
                     </AdminContext.Provider>
                   </UserPostContext.Provider>
                 </PopUpContext.Provider>

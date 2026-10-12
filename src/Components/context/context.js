@@ -39,3 +39,5 @@ export const CurrentCallContext = createContext({
 });
 
 export const PeerContext = createContext();
+
+export const ThemeContext = createContext();

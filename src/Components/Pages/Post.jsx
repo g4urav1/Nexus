@@ -1,8 +1,13 @@
 import { Heart, Send, Trash } from "lucide-react";
+
 import { useContext, useEffect, useState } from "react";
+
 import { useParams } from "react-router-dom";
+
 import DesktopNav from "../Individual/DesktopNav";
+
 import MobileMenu from "../Individual/MobileMenu";
+
 import { AdminContext } from "../context/context";
 
 export default function Post({ socket }) {
@@ -69,9 +74,12 @@ export default function Post({ socket }) {
     try {
       setLoading(true);
 
-      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/post/${id}`, {
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/post/${id}`,
+        {
+          credentials: "include",
+        },
+      );
 
       const data = await response.json();
 
@@ -89,9 +97,12 @@ export default function Post({ socket }) {
     try {
       setCommentsLoading(true);
 
-      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/getComments/${id}`, {
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/getComments/${id}`,
+        {
+          credentials: "include",
+        },
+      );
 
       const data = await response.json();
 
@@ -165,15 +176,18 @@ export default function Post({ socket }) {
     try {
       setCommentLoading(true);
 
-      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/addComments`, {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          PostId: id,
-          Comment: trimmedComment,
-        }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/addComments`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            PostId: id,
+            Comment: trimmedComment,
+          }),
+        },
+      );
 
       const data = await response.json();
 
@@ -208,17 +222,20 @@ export default function Post({ socket }) {
     try {
       setCommentLoading(true);
 
-      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/deleteComment`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/deleteComment`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            CommentId: commentId,
+            PostId: id,
+          }),
         },
-        body: JSON.stringify({
-          CommentId: commentId,
-          PostId: id,
-        }),
-      });
+      );
 
       const data = await response.json();
 
@@ -226,6 +243,7 @@ export default function Post({ socket }) {
         alert(data.message || "Failed to delete comment");
         return;
       }
+
       setComments((prev) => prev.filter((comment) => comment.id !== commentId));
 
       setPost((currentPost) =>
@@ -268,7 +286,7 @@ export default function Post({ socket }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex items-center justify-center">
+      <div className="min-h-screen bg-nexus-bg text-nexus-text flex items-center justify-center">
         Loading...
       </div>
     );
@@ -276,7 +294,7 @@ export default function Post({ socket }) {
 
   if (!post) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex items-center justify-center">
+      <div className="min-h-screen bg-nexus-bg text-nexus-text flex items-center justify-center">
         Post not found
       </div>
     );
@@ -285,7 +303,7 @@ export default function Post({ socket }) {
   const commentCount = post.CommentCount ?? post.comments ?? comments.length;
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-300 pb-10 sm:pb-0">
+    <div className="min-h-screen bg-nexus-bg text-nexus-text transition-colors duration-300 pb-10 sm:pb-0">
       <div className="max-w-7xl mx-auto flex gap-4 lg:gap-6 px-3 sm:px-4 py-4 sm:py-6">
         {/* ================= SIDEBAR ================= */}
         <DesktopNav />
@@ -296,7 +314,7 @@ export default function Post({ socket }) {
             {/* ================= POST ================= */}
             <article
               key={post._id}
-              className="min-w-0 w-full bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 border border-slate-200/80 dark:border-slate-800/80 shadow-sm transition-all duration-200 space-y-3 h-fit"
+              className="min-w-0 w-full bg-nexus-surface rounded-2xl sm:rounded-3xl p-3.5 sm:p-5 border border-nexus-border shadow-sm transition-all duration-200 space-y-3 h-fit"
             >
               {/* Author */}
               <div className="flex items-center justify-between">
@@ -313,11 +331,11 @@ export default function Post({ socket }) {
                   />
 
                   <div className="min-w-0">
-                    <h3 className="font-bold text-sm text-slate-900 dark:text-slate-100 truncate">
+                    <h3 className="font-bold text-sm text-nexus-text truncate">
                       {post.Username}
                     </h3>
 
-                    <span className="block text-[11px] sm:text-xs text-slate-400 dark:text-slate-500 truncate">
+                    <span className="block text-[11px] sm:text-xs text-nexus-text-muted truncate">
                       {post.Username} • {formatPostTime(post.UploadedAt)}
                     </span>
                   </div>
@@ -325,13 +343,13 @@ export default function Post({ socket }) {
               </div>
 
               {/* Caption */}
-              <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed break-words">
+              <p className="text-sm text-nexus-text-secondary leading-relaxed break-words">
                 {post.Caption}
               </p>
 
               {/* Image */}
               {post.Url && (
-                <div className="rounded-xl sm:rounded-2xl overflow-hidden border border-slate-100 dark:border-slate-800">
+                <div className="rounded-xl sm:rounded-2xl overflow-hidden border border-nexus-border">
                   <img
                     src={post.Url}
                     alt="Post asset"
@@ -341,15 +359,13 @@ export default function Post({ socket }) {
               )}
 
               {/* Actions */}
-              <div className="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-800/80 text-xs text-slate-500 dark:text-slate-400 font-medium">
+              <div className="flex items-center justify-between pt-3 border-t border-nexus-border text-xs text-nexus-text-secondary font-medium">
                 <div className="flex items-center space-x-4 sm:space-x-5">
                   {/* Like */}
                   <button
                     onClick={() => handleLike(post._id)}
                     className={`flex items-center space-x-1.5 transition font-bold ${
-                      post.isLiked
-                        ? "text-rose-600 dark:text-rose-500"
-                        : "hover:text-rose-600 dark:hover:text-rose-500"
+                      post.isLiked ? "text-nexus-like" : "hover:text-nexus-like"
                     }`}
                   >
                     <Heart
@@ -361,7 +377,7 @@ export default function Post({ socket }) {
                   </button>
 
                   {/* Comments */}
-                  <button className="flex items-center space-x-1.5 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
+                  <button className="flex items-center space-x-1.5 hover:text-nexus-primary transition">
                     <svg
                       className="w-4 h-4 fill-none stroke-current"
                       viewBox="0 0 24 24"
@@ -381,14 +397,14 @@ export default function Post({ socket }) {
             </article>
 
             {/* ================= COMMENTS ================= */}
-            <article className="min-w-0 w-full relative bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-sm overflow-hidden flex flex-col h-[calc(100vh-2rem)] sm:h-[calc(100vh-3rem)]">
+            <article className="min-w-0 w-full relative bg-nexus-surface rounded-2xl sm:rounded-3xl border border-nexus-border shadow-sm overflow-hidden flex flex-col h-[calc(100vh-2rem)] sm:h-[calc(100vh-3rem)]">
               {/* Header */}
-              <div className="p-4 sm:p-5 border-b border-slate-100 dark:border-slate-800 shrink-0">
-                <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100">
+              <div className="p-4 sm:p-5 border-b border-nexus-border shrink-0">
+                <h2 className="text-base sm:text-lg font-bold text-nexus-text">
                   Comments
                 </h2>
 
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                <p className="text-xs text-nexus-text-secondary mt-1">
                   {comments.length}{" "}
                   {comments.length === 1 ? "comment" : "comments"}
                 </p>
@@ -398,7 +414,7 @@ export default function Post({ socket }) {
               <div className="flex-1 lg:min-h-4/5 overflow-y-auto [&::-webkit-scrollbar]:hidden">
                 {/* Loading */}
                 {commentsLoading && (
-                  <div className="p-8 text-center text-sm text-slate-500 dark:text-slate-400">
+                  <div className="p-8 text-center text-sm text-nexus-text-secondary">
                     Loading comments...
                   </div>
                 )}
@@ -406,11 +422,11 @@ export default function Post({ socket }) {
                 {/* Empty */}
                 {!commentsLoading && comments.length === 0 && (
                   <div className="p-8 text-center">
-                    <p className="font-medium text-slate-700 dark:text-slate-300">
+                    <p className="font-medium text-nexus-text-secondary">
                       No comments yet
                     </p>
 
-                    <p className="text-xs text-slate-400 mt-1">
+                    <p className="text-xs text-nexus-text-muted mt-1">
                       Be the first to comment.
                     </p>
                   </div>
@@ -418,7 +434,7 @@ export default function Post({ socket }) {
 
                 {/* Comments */}
                 {!commentsLoading && comments.length > 0 && (
-                  <div className="divide-y divide-slate-100 dark:divide-slate-800">
+                  <div className="divide-y divide-nexus-border">
                     {comments.map((comment) => (
                       <div
                         key={comment.id}
@@ -434,16 +450,16 @@ export default function Post({ socket }) {
                         {/* Comment Content */}
                         <div className="min-w-0 flex-1">
                           <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-                            <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 truncate max-w-full">
+                            <h3 className="text-sm font-semibold text-nexus-text truncate max-w-full">
                               {comment.Commenter}
                             </h3>
 
-                            <span className="text-[10px] sm:text-[11px] text-slate-400 whitespace-nowrap">
+                            <span className="text-[10px] sm:text-[11px] text-nexus-text-muted whitespace-nowrap">
                               {formatPostTime(comment.CommentedAt)}
                             </span>
                           </div>
 
-                          <p className="text-sm text-slate-600 dark:text-slate-300 mt-1 break-words whitespace-pre-wrap">
+                          <p className="text-sm text-nexus-text-secondary mt-1 break-words whitespace-pre-wrap">
                             {comment.CommentText}
                           </p>
                         </div>
@@ -451,7 +467,7 @@ export default function Post({ socket }) {
                         {(comment.Commenter === admin.Username ||
                           post.Username === admin.Username) && (
                           <div
-                            className="cursor-pointer"
+                            className="cursor-pointer text-nexus-text-secondary hover:text-nexus-error"
                             onClick={(e) => {
                               handleRemoveComment(e, comment.id);
                             }}
@@ -468,7 +484,7 @@ export default function Post({ socket }) {
               {/* Add Comment */}
               <form
                 onSubmit={handleAddComment}
-                className="shrink-0 p-3 sm:p-4 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2 bg-white dark:bg-slate-900"
+                className="shrink-0 p-3 sm:p-4 border-t border-nexus-border flex items-center gap-2 bg-nexus-surface"
               >
                 <input
                   type="text"
@@ -477,13 +493,13 @@ export default function Post({ socket }) {
                   placeholder="Write a comment..."
                   maxLength={500}
                   disabled={commentLoading}
-                  className="min-w-0 flex-1 px-3 sm:px-4 py-2.5 rounded-full bg-slate-100 dark:bg-slate-800 text-sm text-slate-800 dark:text-slate-100 placeholder:text-slate-400 outline-none focus:ring-2 focus:ring-indigo-500/30 disabled:opacity-50"
+                  className="min-w-0 flex-1 px-3 sm:px-4 py-2.5 rounded-full bg-nexus-surface-hover text-sm text-nexus-text placeholder:text-nexus-text-muted outline-none focus:ring-2 focus:ring-nexus-primary/30 disabled:opacity-50"
                 />
 
                 <button
                   type="submit"
                   disabled={!commentText.trim() || commentLoading}
-                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-indigo-600 text-white transition hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
+                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-nexus-primary text-nexus-text transition hover:bg-nexus-primary-hover disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
                 >
                   <Send size={15} />
                 </button>

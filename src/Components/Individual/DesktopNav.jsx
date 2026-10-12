@@ -1,9 +1,9 @@
 import { useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { AdminContext } from "../context/context";
+import { AdminContext, ThemeContext } from "../context/context";
 
 export default function DesktopNav() {
-  const [darkMode, setDarkMode] = useState(true);
+  const { darkMode, setDarkMode } = useContext(ThemeContext);
 
   const navigate = useNavigate();
 
@@ -22,27 +22,32 @@ export default function DesktopNav() {
   };
 
   return (
-    <aside className="hidden md:flex md:w-20 xl:w-64 flex-col justify-between h-[calc(100vh-2rem)] lg:h-[calc(100vh-3rem)] sticky top-4 lg:top-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 rounded-3xl p-4 shadow-sm shrink-0 overflow-auto pt-0 [&::-webkit-scrollbar]:hidden">
+    <aside
+      style={{ backgroundColor: "var(--nexus-bg)" }}
+      className="hidden md:flex md:w-20 xl:w-64 flex-col justify-between h-[calc(100vh-2rem)] lg:h-[calc(100vh-3rem)] sticky top-4 lg:top-6 bg-nexus-bg border border-nexus-border rounded-3xl p-4 shadow-sm shrink-0 overflow-auto pt-0 [&::-webkit-scrollbar]:hidden"
+    >
       <div className="space-y-6">
         {/* Brand Logo */}
-        <div className="flex items-center space-x-3 px-2 sticky top-0 pt-4 bg-white dark:bg-slate-900">
-          <div className="w-10 h-10 bg-gradient-to-tr from-indigo-600 to-violet-500 rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-indigo-500/30">
+        <div className="flex items-center space-x-3 px-2 sticky top-0 pt-4 bg-nexus-bg">
+          <div className="w-10 h-10 bg-gradient-to-tr from-nexus-accent to-nexus-primary rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg">
             N
           </div>
-          <span className="hidden xl:inline font-extrabold text-lg tracking-tight text-slate-900 dark:text-white">
+
+          <span className="hidden xl:inline font-extrabold text-lg tracking-tight text-nexus-text">
             Nexus
-            <span className="text-indigo-600 dark:text-indigo-400">.ui</span>
+            <span className="text-nexus-primary">.ui</span>
           </span>
         </div>
 
+        {/* Feed */}
         <NavLink
           to="/"
-          end // Optional: Ensures exact matching for root path "/"
+          end
           className={({ isActive }) =>
             `flex flex-col items-center space-y-1 transition ${
               isActive
-                ? "text-indigo-600 dark:text-indigo-400 font-semibold"
-                : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                ? "text-nexus-primary font-semibold"
+                : "text-nexus-text-muted hover:text-nexus-text"
             }`
           }
         >
@@ -60,14 +65,14 @@ export default function DesktopNav() {
           <span className="text-[10px]">Feed</span>
         </NavLink>
 
+        {/* Explore */}
         <NavLink
           to="/search"
-          end // Optional: Ensures exact matching for root path "/"
           className={({ isActive }) =>
             `flex flex-col items-center space-y-1 transition ${
               isActive
-                ? "text-indigo-600 dark:text-indigo-400 font-semibold"
-                : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                ? "text-nexus-primary font-semibold"
+                : "text-nexus-text-muted hover:text-nexus-text"
             }`
           }
         >
@@ -84,14 +89,15 @@ export default function DesktopNav() {
           </svg>
           <span className="text-[10px]">Explore</span>
         </NavLink>
+
+        {/* Messages */}
         <NavLink
           to="/inbox"
-          end // Optional: Ensures exact matching for root path "/"
           className={({ isActive }) =>
             `flex flex-col items-center space-y-1 transition ${
               isActive
-                ? "text-indigo-600 dark:text-indigo-400 font-semibold"
-                : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                ? "text-nexus-primary font-semibold"
+                : "text-nexus-text-muted hover:text-nexus-text"
             }`
           }
         >
@@ -108,14 +114,15 @@ export default function DesktopNav() {
           </svg>
           <span className="text-[10px]">Messages</span>
         </NavLink>
+
+        {/* Notifications */}
         <NavLink
           to="/notification"
-          end // Optional: Ensures exact matching for root path "/"
           className={({ isActive }) =>
             `flex flex-col items-center space-y-1 transition ${
               isActive
-                ? "text-indigo-600 dark:text-indigo-400 font-semibold"
-                : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                ? "text-nexus-primary font-semibold"
+                : "text-nexus-text-muted hover:text-nexus-text"
             }`
           }
         >
@@ -135,13 +142,14 @@ export default function DesktopNav() {
           <span className="text-[10px]">Notifications</span>
         </NavLink>
 
+        {/* Profile */}
         <NavLink
           to={`/user/${admin.Username}`}
           className={({ isActive }) =>
             `flex flex-col items-center space-y-1 transition ${
               isActive
-                ? "text-indigo-600 dark:text-indigo-400 font-semibold"
-                : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                ? "text-nexus-primary font-semibold"
+                : "text-nexus-text-muted hover:text-nexus-text"
             }`
           }
         >
@@ -156,21 +164,20 @@ export default function DesktopNav() {
               d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
             />
           </svg>
-
           <span className="text-[10px]">Profile</span>
         </NavLink>
-        <NavLink
-          onClick={() => handleLogout()}
-          className={`flex flex-col items-center space-y-1 transition
-                          text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
-                        }`}
+
+        {/* Logout */}
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="w-full flex flex-col items-center space-y-1 transition text-nexus-text-muted hover:text-nexus-error"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
             height="16"
             fill="currentColor"
-            className="bi bi-box-arrow-left"
             viewBox="0 0 16 16"
           >
             <path
@@ -183,31 +190,33 @@ export default function DesktopNav() {
             />
           </svg>
           <span className="text-[10px]">Logout</span>
-        </NavLink>
+        </button>
       </div>
 
       {/* Dark Mode Toggle */}
-      <div className="space-y-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+      <div className="space-y-3 pt-4 border-t border-nexus-border">
         <button
+          type="button"
           onClick={() => setDarkMode(!darkMode)}
-          className="w-full flex items-center justify-between p-3 rounded-2xl bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 transition"
+          className="w-full flex items-center justify-between p-3 rounded-2xl bg-nexus-surface-hover text-nexus-text-secondary transition"
         >
           <div className="flex items-center space-x-3">
             {darkMode ? (
               <svg
-                className="w-5 h-5 text-amber-400 fill-current"
+                className="w-5 h-5 text-nexus-secondary fill-current"
                 viewBox="0 0 20 20"
               >
                 <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1z" />
               </svg>
             ) : (
               <svg
-                className="w-5 h-5 text-indigo-600 fill-current"
+                className="w-5 h-5 text-nexus-primary fill-current"
                 viewBox="0 0 20 20"
               >
                 <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
               </svg>
             )}
+
             <span className="hidden xl:inline text-xs font-semibold">
               {darkMode ? "Light Theme" : "Dark Theme"}
             </span>

@@ -1,12 +1,17 @@
 import { useContext, useEffect, useState } from "react";
+
 import MobileMenu from "../Individual/MobileMenu";
+
 import DesktopNav from "../Individual/DesktopNav";
+
 import { AdminContext } from "../context/context";
+
 import { Heart } from "lucide-react";
+
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function ProfilePage() {
-  const [darkMode, setDarkMode] = useState(true);
+
   const [activeTab, setActiveTab] = useState("posts");
 
   const { Username } = useParams();
@@ -14,9 +19,11 @@ export default function ProfilePage() {
   const [UserPosts, setUserPosts] = useState([]);
 
   const { admin, setAdmin } = useContext(AdminContext);
+
   const [accountUser, setAccountUser] = useState(null);
 
   const [isFollowing, setIsFollowing] = useState(false);
+
   const [likedPosts, setLikedPosts] = useState([]);
 
   const [conversationId, setConversationId] = useState("");
@@ -117,6 +124,7 @@ export default function ProfilePage() {
 
   const handleLike = async (postId, e) => {
     e.stopPropagation();
+
     try {
       const response = await fetch(`${import.meta.env.VITE_BASE_URL}/likes`, {
         method: "POST",
@@ -193,34 +201,37 @@ export default function ProfilePage() {
         method: "POST",
         credentials: "include",
       });
+
       localStorage.removeItem("adminId");
       navigate("/login");
     }
+
     return;
   };
 
   return (
-    <div className={darkMode ? "dark" : ""}>
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-300">
+    <div>
+      <div className="min-h-screen bg-nexus-bg text-nexus-text transition-colors duration-300">
         {/* APP CONTAINER */}
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-4 lg:gap-6 p-2 sm:p-4 lg:p-6 pb-20 md:pb-6">
           {/* ================= 1. DESKTOP SIDEBAR ================= */}
           <DesktopNav />
 
           {/* ================= 2. MAIN PROFILE CONTENT ================= */}
-          <main className="flex-1 min-w-0 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm">
+          <main className="flex-1 min-w-0 bg-nexus-surface border border-nexus-border rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm">
             {/* Cover Image */}
-            <div className="h-36 sm:h-52 lg:h-60 w-full relative bg-slate-800 overflow-hidden">
+            <div className="h-36 sm:h-52 lg:h-60 w-full relative bg-nexus-surface-hover overflow-hidden">
               <img
                 src={userArr.cover}
                 alt="Cover"
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent"></div>
+
+              <div className="absolute inset-0 bg-gradient-to-t from-nexus-bg/40 via-transparent to-transparent"></div>
 
               <button
                 onClick={() => handleLogout()}
-                className="md:hidden absolute top-3 right-3 p-2 bg-slate-900/60 backdrop-blur-md rounded-full text-white text-xs"
+                className="md:hidden absolute top-3 right-3 p-2 bg-nexus-surface/60 backdrop-blur-md rounded-full text-nexus-text text-xs"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -253,9 +264,10 @@ export default function ProfilePage() {
                       "https://i.pinimg.com/736x/02/59/54/0259543779b1c2db9ba9d62d47e11880.jpg"
                     }
                     alt={accountUser?.Username || "loading..."}
-                    className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover ring-4 ring-white dark:ring-slate-900 shadow-xl"
+                    className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover ring-4 ring-nexus-surface shadow-xl"
                   />
-                  <span className="w-3.5 h-3.5 sm:w-4 sm:h-4 bg-emerald-500 border-2 border-white dark:border-slate-900 rounded-full absolute bottom-2 right-2"></span>
+
+                  <span className="w-3.5 h-3.5 sm:w-4 sm:h-4 bg-nexus-success border-2 border-nexus-surface rounded-full absolute bottom-2 right-2"></span>
                 </div>
 
                 {/* Edit Profile Action */}
@@ -265,13 +277,14 @@ export default function ProfilePage() {
                   <div className="space-x-4">
                     <button
                       onClick={() => (window.location.href = "/create/post")}
-                      className="px-4 py-2 sm:px-5 sm:py-2.5 bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-200 dark:text-slate-900 text-white font-semibold rounded-2xl text-xs sm:text-sm transition shadow-md active:scale-95"
+                      className="px-4 py-2 sm:px-5 sm:py-2.5 bg-nexus-primary hover:bg-nexus-primary-hover text-nexus-text font-semibold rounded-2xl text-xs sm:text-sm transition shadow-md active:scale-95"
                     >
                       Create Post
                     </button>
+
                     <button
                       onClick={() => (window.location.href = "/edit/profile")}
-                      className="px-4 py-2 sm:px-5 sm:py-2.5 bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-200 dark:text-slate-900 text-white font-semibold rounded-2xl text-xs sm:text-sm transition shadow-md active:scale-95"
+                      className="px-4 py-2 sm:px-5 sm:py-2.5 bg-nexus-primary hover:bg-nexus-primary-hover text-nexus-text font-semibold rounded-2xl text-xs sm:text-sm transition shadow-md active:scale-95"
                     >
                       Edit Profile
                     </button>
@@ -282,18 +295,19 @@ export default function ProfilePage() {
                       onClick={() =>
                         (window.location.href = `/inbox/${conversationId}`)
                       }
-                      className="px-4 py-2 sm:px-5 sm:py-2.5 bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-200 dark:text-slate-900 text-white font-semibold rounded-2xl text-xs sm:text-sm transition shadow-md active:scale-95"
+                      className="px-4 py-2 sm:px-5 sm:py-2.5 bg-nexus-primary hover:bg-nexus-primary-hover text-nexus-text font-semibold rounded-2xl text-xs sm:text-sm transition shadow-md active:scale-95"
                     >
                       Message
                     </button>
+
                     <button
                       onClick={() => {
                         handleFollow(accountUser._id);
                       }}
-                      className={`px-4 py-2 sm:px-5 sm:py-2.5 font-semibold rounded-2xl text-xs sm:text-sm transition shadow-md active:scale-95  ${
+                      className={`px-4 py-2 sm:px-5 sm:py-2.5 font-semibold rounded-2xl text-xs sm:text-sm transition shadow-md active:scale-95 ${
                         isFollowing
-                          ? "bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200 hover:bg-rose-100 hover:text-rose-600 dark:hover:bg-rose-950/50 dark:hover:text-rose-400"
-                          : "bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm shadow-indigo-500/20"
+                          ? "bg-nexus-surface-hover text-nexus-text-secondary hover:bg-nexus-error/10 hover:text-nexus-error"
+                          : "bg-nexus-primary hover:bg-nexus-primary-hover text-nexus-text shadow-sm shadow-nexus-primary/20"
                       }`}
                     >
                       {isFollowing ? "UnFollow" : "Follow"}
@@ -305,26 +319,27 @@ export default function ProfilePage() {
               {/* Identity & Bio */}
               <div className="space-y-3">
                 <div>
-                  <h1 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white leading-tight">
+                  <h1 className="text-xl sm:text-2xl font-bold text-nexus-text leading-tight">
                     {accountUser?.Username || (
                       <p className="animate-pulse">loading...</p>
                     )}
                   </h1>
-                  <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">
+
+                  <p className="text-xs sm:text-sm text-nexus-text-secondary font-medium">
                     {accountUser?.Email || (
                       <span className="animate-pulse">loading...</span>
                     )}
                   </p>
                 </div>
 
-                <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed max-w-2xl">
+                <p className="text-xs sm:text-sm text-nexus-text-secondary leading-relaxed max-w-2xl">
                   {accountUser?.Bio || (
                     <span className="animate-pulse">loading...</span>
                   )}
                 </p>
 
                 {/* Meta details */}
-                <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-slate-500 dark:text-slate-400 pt-1">
+                <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-nexus-text-secondary pt-1">
                   <div className="flex items-center space-x-1">
                     <svg
                       className="w-4 h-4"
@@ -339,6 +354,7 @@ export default function ProfilePage() {
                         d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"
                       />
                     </svg>
+
                     <span>{accountUser?.Joined}</span>
                   </div>
                 </div>
@@ -351,52 +367,49 @@ export default function ProfilePage() {
                     }
                     className="cursor-pointer"
                   >
-                    <span className="font-bold text-slate-900 dark:text-white">
+                    <span className="font-bold text-nexus-text">
                       {accountUser?.FollowingCount}
                     </span>{" "}
-                    <span className="text-slate-500 dark:text-slate-400">
-                      Following
-                    </span>
+                    <span className="text-nexus-text-secondary">Following</span>
                   </div>
+
                   <div
                     onClick={() =>
                       (window.location.href = `/Followers/${Username}`)
                     }
                     className="cursor-pointer"
                   >
-                    <span className="font-bold text-slate-900 dark:text-white">
+                    <span className="font-bold text-nexus-text">
                       {accountUser?.FollowersCount}
                     </span>{" "}
-                    <span className="text-slate-500 dark:text-slate-400">
-                      Followers
-                    </span>
+                    <span className="text-nexus-text-secondary">Followers</span>
                   </div>
+
                   <div>
-                    <span className="font-bold text-slate-900 dark:text-white">
+                    <span className="font-bold text-nexus-text">
                       {UserPosts.length}
                     </span>{" "}
-                    <span className="text-slate-500 dark:text-slate-400">
-                      Posts
-                    </span>
+                    <span className="text-nexus-text-secondary">Posts</span>
                   </div>
                 </div>
               </div>
 
               {/* Navigation Tabs */}
-              <div className="flex border-b border-slate-200/80 dark:border-slate-800 mt-6 text-xs sm:text-sm font-semibold">
+              <div className="flex border-b border-nexus-border mt-6 text-xs sm:text-sm font-semibold">
                 {["posts", "media", "likes"].map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
                     className={`py-3 px-4 capitalize relative transition ${
                       activeTab === tab
-                        ? "text-indigo-600 dark:text-indigo-400 font-bold"
-                        : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
+                        ? "text-nexus-primary font-bold"
+                        : "text-nexus-text-secondary hover:text-nexus-text"
                     }`}
                   >
                     {tab}
+
                     {activeTab === tab && (
-                      <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600 dark:bg-indigo-400 rounded-full"></span>
+                      <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-nexus-primary rounded-full"></span>
                     )}
                   </button>
                 ))}
@@ -404,10 +417,11 @@ export default function ProfilePage() {
             </div>
 
             {/* Tab Feed Content */}
-            <div className="p-4 sm:p-6 space-y-4 bg-slate-50/50 dark:bg-slate-950/30">
+            <div className="p-4 sm:p-6 space-y-4 bg-nexus-surface-hover/50">
               {activeTab === "posts" &&
                 UserPosts.length === 0 &&
                 "NO POSTS YET!"}
+
               {activeTab === "posts" &&
                 UserPosts.length > 0 &&
                 UserPosts.map((post) => (
@@ -418,7 +432,7 @@ export default function ProfilePage() {
                       console.log("POST ID:", post._id);
                       window.location.href = `/post/${post._id}`;
                     }}
-                    className="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200/80 dark:border-slate-800/80 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-200 space-y-3"
+                    className="bg-nexus-surface rounded-3xl p-5 border border-nexus-border shadow-sm hover:border-nexus-primary/30 transition-all duration-200 space-y-3"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
@@ -434,25 +448,27 @@ export default function ProfilePage() {
                           }
                           className="w-10 h-10 rounded-full object-cover"
                         />
+
                         <div>
-                          <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-tight">
+                          <h4 className="text-xs sm:text-sm font-bold text-nexus-text leading-tight">
                             {accountUser?.Username || (
                               <p className="animate-pulse">loading...</p>
                             )}
                           </h4>
-                          <span className="text-[11px] text-slate-400">
+
+                          <span className="text-[11px] text-nexus-text-muted">
                             {formatPostTime(post.UploadedAt)}
                           </span>
                         </div>
                       </div>
                     </div>
 
-                    <p className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-nexus-text leading-relaxed">
                       {post.Caption}
                     </p>
 
                     {post.Url && (
-                      <div className="rounded-2xl overflow-hidden border border-slate-100 dark:border-slate-800">
+                      <div className="rounded-2xl overflow-hidden border border-nexus-border">
                         <img
                           src={post.Url}
                           alt="Post media"
@@ -461,22 +477,24 @@ export default function ProfilePage() {
                       </div>
                     )}
 
-                    <div className="flex items-center space-x-6 text-slate-400 text-xs pt-2">
+                    <div className="flex items-center space-x-6 text-nexus-text-muted text-xs pt-2">
                       <button
                         onClick={(e) => handleLike(post._id, e)}
                         className={`flex items-center space-x-1.5 transition ${
                           post.isLiked
-                            ? "text-rose-600 dark:text-rose-500"
-                            : "hover:text-rose-600 dark:hover:text-rose-500"
+                            ? "text-nexus-like"
+                            : "hover:text-nexus-like"
                         } font-bold`}
                       >
                         <Heart
                           size={14}
                           fill={post.isLiked ? "currentColor" : "none"}
                         />
+
                         <span>{post.Likes}</span>
                       </button>
-                      <button className="flex items-center space-x-1.5 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
+
+                      <button className="flex items-center space-x-1.5 hover:text-nexus-primary transition">
                         <svg
                           className="w-4 h-4"
                           fill="none"
@@ -490,6 +508,7 @@ export default function ProfilePage() {
                             d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.585 1.659l-.48 1.921 2.03-.406c.552-.11 1.115.08 1.542.418A8.93 8.93 0 0012 20.25z"
                           />
                         </svg>
+
                         <span>{post.CommentCount}</span>
                       </button>
                     </div>
@@ -501,7 +520,7 @@ export default function ProfilePage() {
                   {UserPosts.map((src) => (
                     <div
                       key={src._id}
-                      className="aspect-square rounded-2xl overflow-hidden bg-slate-800 border border-slate-200/80 dark:border-slate-800"
+                      className="aspect-square rounded-2xl overflow-hidden bg-nexus-surface-hover border border-nexus-border"
                     >
                       <img
                         src={src.Url}
@@ -529,10 +548,10 @@ export default function ProfilePage() {
 
                         window.location.href = `/post/${post.id}`;
                       }}
-                      className="aspect-square rounded-2xl overflow-hidden bg-slate-800 border border-slate-200/80 dark:border-slate-800"
+                      className="aspect-square rounded-2xl overflow-hidden bg-nexus-surface-hover border border-nexus-border"
                     >
                       {post.url && (
-                        <div className="aspect-square rounded-2xl overflow-hidden bg-slate-800 border border-slate-200/80 dark:border-slate-800">
+                        <div className="aspect-square rounded-2xl overflow-hidden bg-nexus-surface-hover border border-nexus-border">
                           <img
                             src={post.url}
                             alt="Post media"

@@ -4,11 +4,11 @@ import {
   CallStatusContext,
   CurrentCallContext,
   ReceiverContext,
+  ThemeContext,
 } from "../context/context";
 import { useNavigate } from "react-router-dom";
 
 export default function CallNotification() {
-  const [darkMode] = useState(true);
 
   const navigate = useNavigate();
 
@@ -49,10 +49,10 @@ export default function CallNotification() {
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, [callStatus]);
+  }, [callStatus, setCaller]);
 
   return (
-    <div className={darkMode ? "dark" : ""}>
+    <div>
       {callStatus != null && (
         <div className="absolute z-50 w-full">
           {caller && (
@@ -61,12 +61,13 @@ export default function CallNotification() {
                 navigate(`/call/${currentCall.conversationId}`);
               }}
               className="
-            md:w-1/5 w-full rounded-full mt-3 mx-auto
-            bg-gradient-to-tr from-indigo-600 to-violet-500
-            shadow-[0_10px_30px_rgba(99,102,241,0.35)]
-            border border-white/20
-            transition-all duration-300
-          "
+                md:w-1/5 w-full rounded-full mt-3 mx-auto
+                bg-nexus-primary
+                text-white
+                shadow-[0_10px_30px_rgba(99,102,241,0.35)]
+                border border-nexus-border
+                transition-all duration-300
+              "
             >
               <main>
                 <div className="w-full">
@@ -79,15 +80,15 @@ export default function CallNotification() {
                       <span>•</span>
 
                       {callStatus === "incoming" && (
-                        <p className="text-sm text-slate-300">Incoming Call</p>
+                        <p className="text-sm text-white/80">Incoming Call</p>
                       )}
 
                       {callStatus === "calling" && (
-                        <p className="text-sm text-slate-300">Calling...</p>
+                        <p className="text-sm text-white/80">Calling...</p>
                       )}
 
                       {callStatus === "OnCall" && (
-                        <p className="text-sm text-slate-300">
+                        <p className="text-sm text-white/80">
                           {String(hours).padStart(2, "0")}:
                           {String(minutes).padStart(2, "0")}:
                           {String(seconds).padStart(2, "0")}
@@ -95,7 +96,7 @@ export default function CallNotification() {
                       )}
 
                       {callStatus === "ended" && (
-                        <p className="text-sm text-slate-100">Ended</p>
+                        <p className="text-sm text-white">Ended</p>
                       )}
                     </div>
                   </div>

@@ -1,3 +1,84 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  /* Background */
+  --nexus-bg: #f8fafc;
+  --nexus-surface: #ffffff;
+  --nexus-surface-hover: #f1f5f9;
+
+  /* Brand */
+  --nexus-primary: #8b5cf6;
+  --nexus-primary-hover: #7c3aed;
+  --nexus-secondary: #ec4899;
+  --nexus-accent: #6366f1;
+
+  /* Text */
+  --nexus-text: #18181b;
+  --nexus-text-secondary: #475569;
+  --nexus-text-muted: #94a3b8;
+
+  /* Border */
+  --nexus-border: #e2e8f0;
+
+  /* Status */
+  --nexus-success: #22c55e;
+  --nexus-error: #ef4444;
+  --nexus-like: #f43f5e;
+}
+
+.dark {
+  --nexus-bg: #09090b;
+  --nexus-surface: #18181b;
+  --nexus-surface-hover: #27272a;
+
+  --nexus-primary: #a78bfa;
+  --nexus-primary-hover: #8b5cf6;
+  --nexus-secondary: #f472b6;
+  --nexus-accent: #6366f1;
+
+  --nexus-text: #f4f4f5;
+  --nexus-text-secondary: #a1a1aa;
+  --nexus-text-muted: #71717a;
+
+  --nexus-border: #3f3f46;
+
+  --nexus-success: #4ade80;
+  --nexus-error: #f87171;
+  --nexus-like: #fb7185;
+}
+
+body {
+  background-color: var(--nexus-bg);
+  color: var(--nexus-text);
+}
+
+/* Fallback utility classes */
+.bg-nexus-bg {
+  background-color: var(--nexus-bg);
+}
+
+.bg-nexus-surface {
+  background-color: var(--nexus-surface);
+}
+
+.bg-nexus-surface-hover {
+  background-color: var(--nexus-surface-hover);
+}
+
+.text-nexus-text {
+  color: var(--nexus-text);
+}
+
+.text-nexus-text-secondary {
+  color: var(--nexus-text-secondary);
+}
+
+.text-nexus-text-muted {
+  color: var(--nexus-text-muted);
+}
+
+.border-nexus-border {
+  border-color: var(--nexus-border);
+}

@@ -1,17 +1,20 @@
 import { useContext, useEffect, useState } from "react";
 import DesktopNav from "../Individual/DesktopNav";
 import MobileMenu from "../Individual/MobileMenu";
-import { AdminContext } from "../context/context";
+import { ThemeContext } from "../context/context";
 
 export default function NotificationPage({ socket }) {
-  const [darkMode, setDarkMode] = useState(true);
+  const { darkMode, setDarkMode } = useContext(ThemeContext);
   const [notification, setNotification] = useState([]);
 
   const getNotifications = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/notifications`, {
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/notifications`,
+        {
+          credentials: "include",
+        },
+      );
       const data = await response.json();
 
       setNotification(data);
@@ -53,32 +56,36 @@ export default function NotificationPage({ socket }) {
   };
 
   return (
-    <div className={darkMode ? "dark" : ""}>
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-300">
+    <div>
+      <div className="min-h-screen bg-nexus-bg text-nexus-text transition-colors duration-300">
         {/* APP CONTAINER */}
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-4 lg:gap-6 p-2 sm:p-4 lg:p-6 pb-20 md:pb-6">
           {/* ================= 1. DESKTOP SIDEBAR ================= */}
 
           <DesktopNav />
+
           {/* ================= 2. MAIN Notification CONTENT ================= */}
 
-          <main className="flex-1 min-w-0 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-sm space-y-6">
+          <main className="flex-1 min-w-0 bg-nexus-surface border border-nexus-border rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-sm space-y-6">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
+                <h1 className="text-xl sm:text-2xl font-bold text-nexus-text">
                   Notifications
                 </h1>
-                <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+
+                <p className="text-xs sm:text-sm text-nexus-text-secondary">
                   activities on your account
                 </p>
               </div>
+
               <button
                 onClick={() => setDarkMode(!darkMode)}
-                className="md:hidden p-2 text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400"
+                className="md:hidden p-2 text-nexus-text-secondary hover:text-nexus-primary"
               >
                 {darkMode ? "☀️" : "🌙"}
               </button>
             </div>
+
             {/* ================= Notificationss================= */}
 
             <div className="grid grid-cols-1 gap-3 sm:gap-4">
@@ -90,18 +97,18 @@ export default function NotificationPage({ socket }) {
                       (window.location.href = `/user/${notify.NotificationBy}`)
                     }
                     className="
-          w-full
-          p-2 sm:p-3
-          bg-slate-50/70 dark:bg-slate-800/40
-          border border-slate-200/80 dark:border-slate-800/80
-          rounded-xl sm:rounded-2xl
-          flex flex-col
-          gap-3
-          hover:border-indigo-500/30
-          transition
-          cursor-pointer
-          overflow-hidden
-        "
+                      w-full
+                      p-2 sm:p-3
+                      bg-nexus-surface-hover
+                      border border-nexus-border
+                      rounded-xl sm:rounded-2xl
+                      flex flex-col
+                      gap-3
+                      hover:border-nexus-primary/30
+                      transition
+                      cursor-pointer
+                      overflow-hidden
+                    "
                   >
                     <div className="flex items-start justify-between gap-3">
                       {/* User + Notification */}
@@ -113,33 +120,32 @@ export default function NotificationPage({ socket }) {
                           }
                           alt={notify.NotificationBy}
                           className="
-                w-9 h-9
-                sm:w-11 sm:h-11
-                md:w-12 md:h-12
-                rounded-full
-                object-cover
-                shrink-0
-              "
+                            w-9 h-9
+                            sm:w-11 sm:h-11
+                            md:w-12 md:h-12
+                            rounded-full
+                            object-cover
+                            shrink-0
+                          "
                         />
 
                         <div className="min-w-0 flex-1">
                           <h3
                             className="
-                 
-                  text-sm sm:text-base
-                  text-slate-900 dark:text-white/70
-                  leading-snug
-                  break-words
-                  line-clamp-2
-                "
+                              text-sm sm:text-base
+                              text-nexus-text
+                              leading-snug
+                              break-words
+                              line-clamp-2
+                            "
                           >
-                            <span className="font-bold text-white">
+                            <span className="font-bold text-nexus-text">
                               {notify.NotificationBy}
                             </span>{" "}
                             {notify.NotificationMessage}
                           </h3>
 
-                          <p className="text-[10px] sm:text-xs text-slate-400 mt-1">
+                          <p className="text-[10px] sm:text-xs text-nexus-text-muted mt-1">
                             {formatPostTime(notify.sentAt)}
                           </p>
                         </div>
@@ -152,12 +158,12 @@ export default function NotificationPage({ socket }) {
                             src={notify.postUrl}
                             alt="Post"
                             className="
-                  w-14 h-14
-                  sm:w-16 sm:h-16
-                  md:w-20 md:h-20
-                  rounded-lg sm:rounded-xl
-                  object-cover
-                "
+                              w-14 h-14
+                              sm:w-16 sm:h-16
+                              md:w-20 md:h-20
+                              rounded-lg sm:rounded-xl
+                              object-cover
+                            "
                           />
                         ) : (
                           <button></button>
@@ -169,7 +175,7 @@ export default function NotificationPage({ socket }) {
               ) : (
                 <div
                   key={0}
-                  className="col-span-full text-center py-12 text-slate-400 text-xs"
+                  className="col-span-full text-center py-12 text-nexus-text-muted text-xs"
                 >
                   No Notifications yet.
                 </div>

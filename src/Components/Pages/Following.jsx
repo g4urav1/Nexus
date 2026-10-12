@@ -5,7 +5,6 @@ import { AdminContext } from "../context/context";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function ProfilePage() {
-  const [darkMode] = useState(true);
   const [following, setfollowing] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -63,7 +62,7 @@ export default function ProfilePage() {
       setLoading(true);
 
       const response = await fetch(
-       `${import.meta.env.VITE_BASE_URL}/getFollowing/${encodeURIComponent(Username)}`,
+        `${import.meta.env.VITE_BASE_URL}/getFollowing/${encodeURIComponent(Username)}`,
         {
           credentials: "include",
         },
@@ -78,7 +77,6 @@ export default function ProfilePage() {
       }
 
       setfollowing(data.result);
-
     } catch (error) {
       console.error("Failed to get following:", error);
       setfollowing([]);
@@ -92,15 +90,15 @@ export default function ProfilePage() {
   }, [Username]);
 
   return (
-    <div className={darkMode ? "dark" : ""}>
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-300">
+    <div>
+      <div className="min-h-screen bg-nexus-bg text-nexus-text transition-colors duration-300">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-4 lg:gap-6 p-2 sm:p-4 lg:p-6 pb-20 md:pb-6">
           <DesktopNav />
 
-          <main className="flex-1 min-w-0 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm">
+          <main className="flex-1 min-w-0 bg-nexus-surface border border-nexus-border rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm">
             <div className="p-4">
               {loading ? (
-                <div className="text-center py-12 text-slate-400 text-sm">
+                <div className="text-center py-12 text-nexus-text-muted text-sm">
                   Loading following...
                 </div>
               ) : following.length > 0 ? (
@@ -111,7 +109,7 @@ export default function ProfilePage() {
                       onClick={() =>
                         navigate(`/user/${followingIds.Following}`)
                       }
-                      className="p-4 bg-slate-50/70 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl flex items-center justify-between hover:border-indigo-500/30 transition cursor-pointer"
+                      className="p-4 bg-nexus-surface-hover border border-nexus-border rounded-2xl flex items-center justify-between hover:border-nexus-primary/30 transition cursor-pointer"
                     >
                       <div className="flex items-center gap-3">
                         <img
@@ -123,19 +121,20 @@ export default function ProfilePage() {
                           className="w-12 h-12 rounded-full object-cover"
                         />
 
-                        <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+                        <h3 className="text-sm font-bold text-nexus-text">
                           {followingIds.Following}
                         </h3>
                       </div>
+
                       {followingIds.id !== admin._id && (
                         <button
                           onClick={(e) => {
                             handleFollow(followingIds.id, e);
                           }}
-                          className={`px-4 py-2 sm:px-5 sm:py-2.5 font-semibold rounded-2xl text-xs sm:text-sm transition shadow-md active:scale-95  ${
+                          className={`px-4 py-2 sm:px-5 sm:py-2.5 font-semibold rounded-2xl text-xs sm:text-sm transition shadow-md active:scale-95 ${
                             followingIds.isFollowing
-                              ? "bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200 hover:bg-rose-100 hover:text-rose-600 dark:hover:bg-rose-950/50 dark:hover:text-rose-400"
-                              : "bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm shadow-indigo-500/20"
+                              ? "bg-nexus-surface-hover text-nexus-text-secondary hover:bg-nexus-error/10 hover:text-nexus-error"
+                              : "bg-nexus-primary hover:bg-nexus-primary-hover text-nexus-text shadow-sm shadow-nexus-primary/20"
                           }`}
                         >
                           {followingIds.isFollowing ? "UnFollow" : "Follow"}
@@ -145,7 +144,7 @@ export default function ProfilePage() {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-12 text-slate-400 text-sm">
+                <div className="text-center py-12 text-nexus-text-muted text-sm">
                   No following found.
                 </div>
               )}
