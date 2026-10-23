@@ -4,14 +4,27 @@ import cookie from "cookie";
 import mongoose from "mongoose";
 
 export const Socket = (server) => {
-  const io = new Server(server, {
-    cors: {
-      origin: ["http://localhost:5173", process.env.FRONTEND_URL].filter(
-        Boolean,
-      ),
+  const cors = require("cors");
+
+  const allowedOrigins = [
+    "http://localhost:5173",
+    "https://nexus-qkfr2q6xr-g4urav1.vercel.app",
+  ];
+
+  app.use(
+    cors({
+      origin: allowedOrigins,
       credentials: true,
-    },
-  });
+    }),
+  );
+
+  app.options(
+    /.*/,
+    cors({
+      origin: allowedOrigins,
+      credentials: true,
+    }),
+  );
 
   // Socket authentication
   io.use(async (socket, next) => {

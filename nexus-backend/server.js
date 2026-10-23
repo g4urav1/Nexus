@@ -22,12 +22,24 @@ const io = Socket(server);
 
 app.set("io", io);
 
+const cors = require("cors");
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://nexus-qkfr2q6xr-g4urav1.vercel.app",
+];
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      process.env.FRONTEND_URL,
-    ].filter(Boolean),
+    origin: allowedOrigins,
+    credentials: true,
+  }),
+);
+
+app.options(
+  /.*/,
+  cors({
+    origin: allowedOrigins,
     credentials: true,
   }),
 );
