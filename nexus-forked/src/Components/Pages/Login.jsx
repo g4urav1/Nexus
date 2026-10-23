@@ -104,8 +104,8 @@ export default function LoginPage() {
 
             <h2 className="text-3xl font-bold mt-4">Welcome Back</h2>
 
-            <p className="text-nexus-text-secondary mt-2">
-              Sign in to continue
+            <p className="text-black dark:text-white mt-2">
+              Log in to continue
             </p>
           </div>
 
@@ -136,7 +136,7 @@ export default function LoginPage() {
                 placeholder="Password"
                 value={Password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-xl border border-nexus-border bg-nexus-surface py-3 pl-11 pr-12 outline-none focus:ring-2 focus:ring-nexus-primary"
+                className="w-full rounded-xl border border-nexus-border bg-nexus-surface py-3 pl-11 pr-12 outline-none focus:ring-2 focus:ring-nexus-primary text-black dark:text-white"
               />
 
               <button
