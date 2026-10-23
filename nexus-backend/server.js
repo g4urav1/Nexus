@@ -18,7 +18,7 @@ const server = http.createServer(app);
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://nexus-qkfr2q6xr-g4urav1.vercel.app",
+  "https://nexus-tan-phi.vercel.app",
 ];
 
 // Express CORS

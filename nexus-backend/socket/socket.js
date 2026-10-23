@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://nexus-qkfr2q6xr-g4urav1.vercel.app",
+  "https://nexus-tan-phi.vercel.app",
 ];
 
 export const Socket = (server) => {
