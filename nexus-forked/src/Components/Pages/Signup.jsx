@@ -82,8 +82,8 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-nexus-bg px-4 py-8">
-      <div className="w-full max-w-md rounded-3xl bg-nexus-surface border border-nexus-border p-8 shadow-2xl">
+    <div className="min-h-screen flex items-center justify-center bg-nexus-bg px-4 py-8 text-nexus-text">
+      <div className="w-full max-w-md rounded-3xl bg-nexus-surface border border-nexus-border p-8 shadow-2xl text-nexus-text">
         {/* Logo */}
         <div className="flex flex-col items-center">
           <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-nexus-primary via-nexus-secondary to-nexus-accent flex items-center justify-center shadow-lg">
@@ -137,7 +137,7 @@ export default function SignupPage() {
                 usernameAvailability(username);
               }}
               placeholder="Username"
-              className="w-full rounded-xl border border-nexus-border bg-nexus-surface text-nexus-text placeholder:text-nexus-text-muted py-3 pl-11 pr-11 outline-none focus:ring-2 focus:ring-nexus-primary"
+              className="w-full rounded-xl border border-nexus-border bg-nexus-surface-hover text-nexus-text placeholder:text-nexus-text-muted py-3 pl-11 pr-11 outline-none focus:ring-2 focus:ring-nexus-primary"
             />
 
             <p className="absolute right-4 top-1/2 -translate-y-1/2">
@@ -160,7 +160,7 @@ export default function SignupPage() {
               value={Email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email address"
-              className="w-full rounded-xl border border-nexus-border bg-nexus-surface text-nexus-text placeholder:text-nexus-text-muted py-3 pl-11 pr-4 outline-none focus:ring-2 focus:ring-nexus-primary"
+              className="w-full rounded-xl border border-nexus-border bg-nexus-surface-hover text-nexus-text placeholder:text-nexus-text-muted py-3 pl-11 pr-4 outline-none focus:ring-2 focus:ring-nexus-primary"
             />
           </div>
 
@@ -175,7 +175,7 @@ export default function SignupPage() {
               placeholder="Password"
               value={Password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-xl border border-nexus-border bg-nexus-surface text-nexus-text placeholder:text-nexus-text-muted py-3 pl-11 pr-12 outline-none focus:ring-2 focus:ring-nexus-primary"
+              className="w-full rounded-xl border border-nexus-border bg-nexus-surface-hover text-nexus-text placeholder:text-nexus-text-muted py-3 pl-11 pr-12 outline-none focus:ring-2 focus:ring-nexus-primary"
             />
 
             <button
@@ -199,7 +199,7 @@ export default function SignupPage() {
               value={ConfirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="Confirm password"
-              className="w-full rounded-xl border border-nexus-border bg-nexus-surface text-nexus-text placeholder:text-nexus-text-muted py-3 pl-11 pr-12 outline-none focus:ring-2 focus:ring-nexus-primary"
+              className="w-full rounded-xl border border-nexus-border bg-nexus-surface-hover text-nexus-text placeholder:text-nexus-text-muted py-3 pl-11 pr-12 outline-none focus:ring-2 focus:ring-nexus-primary"
             />
 
             <button

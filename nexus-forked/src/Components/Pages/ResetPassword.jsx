@@ -45,16 +45,16 @@ export default function ForgetPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-nexus-bg flex items-center justify-center px-4">
+    <div className="min-h-screen bg-nexus-bg text-nexus-text flex items-center justify-center px-4">
       <div className="w-full max-w-5xl grid lg:grid-cols-2 rounded-3xl overflow-hidden shadow-2xl bg-nexus-surface">
         {/* Left Side */}
-        <div className="hidden lg:flex flex-col justify-between bg-gradient-to-br from-nexus-primary via-nexus-secondary to-nexus-accent p-12 text-nexus-text relative overflow-hidden">
-          <div className="absolute -top-16 -left-16 h-56 w-56 rounded-full bg-nexus-surface/10 blur-3xl" />
-          <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-nexus-surface/10 blur-3xl" />
+        <div className="hidden lg:flex flex-col justify-between bg-gradient-to-br from-nexus-primary via-nexus-secondary to-nexus-accent p-12 text-white relative overflow-hidden">
+          <div className="absolute -top-16 -left-16 h-56 w-56 rounded-full bg-white/10 blur-3xl" />
+          <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
 
           <div className="relative">
-            <Instagram size={50} />
-            <h1 className="text-5xl font-bold mt-6">
+            <Instagram size={50} className="text-white" />
+            <h1 className="text-5xl font-bold mt-6 text-white">
               Connect.
               <br />
               Share.
@@ -62,7 +62,7 @@ export default function ForgetPasswordPage() {
               Inspire.
             </h1>
 
-            <p className="mt-6 text-nexus-text/80 text-lg leading-relaxed">
+            <p className="mt-6 text-white/80 text-lg leading-relaxed">
               Discover amazing creators and connect with your friends in one
               beautiful place.
             </p>
@@ -71,28 +71,30 @@ export default function ForgetPasswordPage() {
           <div className="relative flex gap-3">
             <img
               src="https://i.pravatar.cc/60?img=1"
-              className="rounded-full border-4 border-nexus-surface"
+              className="rounded-full border-4 border-white"
             />
             <img
               src="https://i.pravatar.cc/60?img=2"
-              className="rounded-full border-4 border-nexus-surface -ml-4"
+              className="rounded-full border-4 border-white -ml-4"
             />
             <img
               src="https://i.pravatar.cc/60?img=3"
-              className="rounded-full border-4 border-nexus-surface -ml-4"
+              className="rounded-full border-4 border-white -ml-4"
             />
-            <span className="ml-4 text-nexus-text/80 self-center">
+            <span className="ml-4 text-white/80 self-center">
               Join 50k+ creators
             </span>
           </div>
         </div>
 
         {/* Right Side */}
-        <div className="p-8 md:p-14">
+        <div className="p-8 md:p-14 text-nexus-text">
           <div className="text-center mb-10">
             <Instagram className="mx-auto text-nexus-primary" size={42} />
 
-            <h2 className="text-3xl font-bold mt-4">Reset Your Password?</h2>
+            <h2 className="text-3xl font-bold mt-4 text-nexus-text">
+              Reset Your Password?
+            </h2>
 
             <p className="text-nexus-text-secondary mt-2">set new password.</p>
           </div>
@@ -109,7 +111,7 @@ export default function ForgetPasswordPage() {
                 type="text"
                 placeholder="Username"
                 value={UserName}
-                className="w-full rounded-xl border border-nexus-border bg-nexus-surface-hover py-3 pl-12 pr-4 outline-none text-nexus-text-muted"
+                className="w-full rounded-xl border border-nexus-border bg-nexus-surface-hover py-3 pl-12 pr-4 text-nexus-text outline-none disabled:opacity-100"
               />
             </div>
 
@@ -124,7 +126,7 @@ export default function ForgetPasswordPage() {
                 placeholder="New Password"
                 value={Password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-xl border border-nexus-border bg-nexus-surface py-3 pl-11 pr-12 outline-none focus:ring-2 focus:ring-nexus-primary"
+                className="w-full rounded-xl border border-nexus-border bg-nexus-surface-hover py-3 pl-11 pr-12 text-nexus-text placeholder:text-nexus-text-muted outline-none focus:ring-2 focus:ring-nexus-primary"
               />
 
               <button

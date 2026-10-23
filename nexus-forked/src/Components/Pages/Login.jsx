@@ -57,7 +57,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-nexus-bg text-nexus-text flex items-center justify-center px-4">
-      <div className="w-full max-w-5xl grid lg:grid-cols-2 rounded-3xl overflow-hidden shadow-2xl bg-nexus-surface border border-nexus-border">
+      <div className="w-full max-w-5xl grid lg:grid-cols-2 rounded-3xl overflow-hidden shadow-2xl bg-nexus-surface border border-nexus-border text-nexus-text">
         {/* Left Side */}
         <div className="hidden lg:flex flex-col justify-between bg-gradient-to-br from-nexus-primary via-nexus-secondary to-nexus-accent p-12 text-white relative overflow-hidden">
           <div className="absolute -top-16 -left-16 h-56 w-56 rounded-full bg-white/10 blur-3xl" />
@@ -66,7 +66,7 @@ export default function LoginPage() {
           <div className="relative">
             <Instagram size={50} />
 
-            <h1 className="text-5xl font-bold mt-6">
+            <h1 className="text-5xl font-bold mt-6 text-white">
               Connect.
               <br />
               Share.
@@ -142,7 +142,7 @@ export default function LoginPage() {
                 placeholder="Password"
                 value={Password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-xl border border-nexus-border bg-nexus-surface text-nexus-text placeholder:text-nexus-text-muted py-3 pl-11 pr-12 outline-none focus:ring-2 focus:ring-nexus-primary"
+                className="w-full rounded-xl border border-nexus-border bg-nexus-surface-hover text-nexus-text placeholder:text-nexus-text-muted py-3 pl-11 pr-12 outline-none focus:ring-2 focus:ring-nexus-primary"
               />
 
               <button
