@@ -6,7 +6,9 @@ import mongoose from "mongoose";
 export const Socket = (server) => {
   const io = new Server(server, {
     cors: {
-      origin: "http://localhost:5173",
+      origin: ["http://localhost:5173", process.env.FRONTEND_URL].filter(
+        Boolean,
+      ),
       credentials: true,
     },
   });
@@ -22,7 +24,7 @@ export const Socket = (server) => {
         return next(new Error("Unauthorized"));
       }
 
-      const payload = jwt.verify(token, "userIdKey");
+      const payload = jwt.verify(token, process.env.JWT_SECRET);
 
       console.log(payload);
 

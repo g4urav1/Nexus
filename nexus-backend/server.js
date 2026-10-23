@@ -14,7 +14,6 @@ import passwordRoutes from "./routes/password.routes.js";
 import { Socket } from "./socket/socket.js";
 
 import http from "http";
-import { authenticate } from "./middleware/auth.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -25,7 +24,10 @@ app.set("io", io);
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      process.env.FRONTEND_URL,
+    ].filter(Boolean),
     credentials: true,
   }),
 );
@@ -68,6 +70,8 @@ app.get("/randomroute", (req, res) => {
 
 // peerjs
 
-server.listen(1111, () => {
-  console.log("http://localhost:1111");
+const PORT = process.env.PORT || 1111;
+
+server.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server running on port ${PORT}`);
 });

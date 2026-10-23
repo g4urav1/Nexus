@@ -69,9 +69,13 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    const token = await jwt.sign({ userId: admin._id }, "userIdKey", {
-      expiresIn: "90d",
-    });
+    const token = await jwt.sign(
+      { userId: admin._id },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "90d",
+      },
+    );
     res.cookie("jwt", token, {
       maxAge: 1000 * 60 * 60 * 24 * 90,
       secure: true,

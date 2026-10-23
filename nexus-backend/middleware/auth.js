@@ -10,7 +10,7 @@ export const authenticate = (req, res, next) => {
       });
     }
 
-    const payload = jwt.verify(token, "userIdKey");
+   const payload = jwt.verify(token, process.env.JWT_SECRET);
 
     req.userId = payload.userId;
 
