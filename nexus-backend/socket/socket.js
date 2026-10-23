@@ -3,28 +3,20 @@ import jwt from "jsonwebtoken";
 import cookie from "cookie";
 import mongoose from "mongoose";
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://nexus-qkfr2q6xr-g4urav1.vercel.app",
+];
+
 export const Socket = (server) => {
-  const cors = require("cors");
-
-  const allowedOrigins = [
-    "http://localhost:5173",
-    "https://nexus-qkfr2q6xr-g4urav1.vercel.app",
-  ];
-
-  app.use(
-    cors({
+  // Socket.IO CORS
+  const io = new Server(server, {
+    cors: {
       origin: allowedOrigins,
+      methods: ["GET", "POST"],
       credentials: true,
-    }),
-  );
-
-  app.options(
-    /.*/,
-    cors({
-      origin: allowedOrigins,
-      credentials: true,
-    }),
-  );
+    },
+  });
 
   // Socket authentication
   io.use(async (socket, next) => {
@@ -62,10 +54,12 @@ export const Socket = (server) => {
       next();
     } catch (error) {
       console.log("Socket authentication failed:", error.message);
+
       next(new Error("Unauthorized"));
     }
   });
 
+  // Socket connection and events
   io.on("connection", (socket) => {
     console.log(socket.id, "connected");
 
