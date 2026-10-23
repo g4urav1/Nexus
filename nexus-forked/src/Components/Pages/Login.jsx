@@ -41,6 +41,7 @@ export default function LoginPage() {
       });
 
       const data = await response.json();
+
       if (response.ok) {
         alert(data.message);
         setAdmin(data.admin);
@@ -55,15 +56,16 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-nexus-bg flex items-center justify-center px-4">
-      <div className="w-full max-w-5xl grid lg:grid-cols-2 rounded-3xl overflow-hidden shadow-2xl bg-nexus-surface">
+    <div className="min-h-screen bg-nexus-bg text-nexus-text flex items-center justify-center px-4">
+      <div className="w-full max-w-5xl grid lg:grid-cols-2 rounded-3xl overflow-hidden shadow-2xl bg-nexus-surface border border-nexus-border">
         {/* Left Side */}
-        <div className="hidden lg:flex flex-col justify-between bg-gradient-to-br from-nexus-primary via-nexus-secondary to-nexus-accent p-12 text-nexus-text relative overflow-hidden">
-          <div className="absolute -top-16 -left-16 h-56 w-56 rounded-full bg-nexus-surface/10 blur-3xl" />
-          <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-nexus-surface/10 blur-3xl" />
+        <div className="hidden lg:flex flex-col justify-between bg-gradient-to-br from-nexus-primary via-nexus-secondary to-nexus-accent p-12 text-white relative overflow-hidden">
+          <div className="absolute -top-16 -left-16 h-56 w-56 rounded-full bg-white/10 blur-3xl" />
+          <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
 
           <div className="relative">
             <Instagram size={50} />
+
             <h1 className="text-5xl font-bold mt-6">
               Connect.
               <br />
@@ -72,7 +74,7 @@ export default function LoginPage() {
               Inspire.
             </h1>
 
-            <p className="mt-6 text-nexus-text/80 text-lg leading-relaxed">
+            <p className="mt-6 text-white/90 text-lg leading-relaxed">
               Discover amazing creators and connect with your friends in one
               beautiful place.
             </p>
@@ -81,17 +83,21 @@ export default function LoginPage() {
           <div className="relative flex gap-3">
             <img
               src="https://i.pravatar.cc/60?img=1"
-              className="rounded-full border-4 border-nexus-surface"
+              alt="Creator"
+              className="rounded-full border-4 border-white"
             />
             <img
               src="https://i.pravatar.cc/60?img=2"
-              className="rounded-full border-4 border-nexus-surface -ml-4"
+              alt="Creator"
+              className="rounded-full border-4 border-white -ml-4"
             />
             <img
               src="https://i.pravatar.cc/60?img=3"
-              className="rounded-full border-4 border-nexus-surface -ml-4"
+              alt="Creator"
+              className="rounded-full border-4 border-white -ml-4"
             />
-            <span className="ml-4 text-nexus-text/80 self-center">
+
+            <span className="ml-4 text-white/90 self-center">
               Join 50k+ creators
             </span>
           </div>
@@ -102,11 +108,11 @@ export default function LoginPage() {
           <div className="text-center mb-10">
             <Instagram className="mx-auto text-nexus-primary" size={42} />
 
-            <h2 className="text-3xl font-bold mt-4">Welcome Back</h2>
+            <h2 className="text-3xl font-bold mt-4 text-nexus-text">
+              Welcome Back
+            </h2>
 
-            <p className="text-black dark:text-white mt-2">
-              Log in to continue
-            </p>
+            <p className="text-nexus-text-secondary mt-2">Log in to continue</p>
           </div>
 
           <form className="space-y-5">
@@ -121,7 +127,7 @@ export default function LoginPage() {
                 placeholder="Email"
                 value={Email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full rounded-xl border border-nexus-border bg-nexus-surface-hover py-3 pl-12 pr-4 outline-none focus:border-nexus-primary focus:ring-2 focus:ring-nexus-primary/20"
+                className="w-full rounded-xl border border-nexus-border bg-nexus-surface-hover text-nexus-text placeholder:text-nexus-text-muted py-3 pl-12 pr-4 outline-none focus:border-nexus-primary focus:ring-2 focus:ring-nexus-primary/20"
               />
             </div>
 
@@ -136,7 +142,7 @@ export default function LoginPage() {
                 placeholder="Password"
                 value={Password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-xl border border-nexus-border bg-nexus-surface py-3 pl-11 pr-12 outline-none focus:ring-2 focus:ring-nexus-primary text-black dark:text-white"
+                className="w-full rounded-xl border border-nexus-border bg-nexus-surface text-nexus-text placeholder:text-nexus-text-muted py-3 pl-11 pr-12 outline-none focus:ring-2 focus:ring-nexus-primary"
               />
 
               <button
@@ -148,9 +154,9 @@ export default function LoginPage() {
               </button>
             </div>
 
-            <div className="flex justify-between text-sm">
+            <div className="flex justify-between text-sm text-nexus-text-secondary">
               <label className="flex items-center gap-2">
-                <input type="checkbox" />
+                <input type="checkbox" className="accent-nexus-primary" />
                 Remember me
               </label>
 
@@ -164,11 +170,12 @@ export default function LoginPage() {
 
             <button
               type="button"
+              disabled={disable}
               onClick={() => {
                 handleLogin();
               }}
-              className={`w-full rounded-xl bg-nexus-primary py-3 font-semibold text-nexus-text transition hover:bg-nexus-primary-hover hover:scale-[1.02] active:scale-95 ${
-                disable ? "cursor-not-allowed" : "cursor-pointer"
+              className={`w-full rounded-xl bg-nexus-primary py-3 font-semibold text-white transition hover:bg-nexus-primary-hover hover:scale-[1.02] active:scale-95 ${
+                disable ? "cursor-not-allowed opacity-60" : "cursor-pointer"
               }`}
             >
               Sign In
@@ -182,12 +189,18 @@ export default function LoginPage() {
           </div>
 
           <div className="space-y-3">
-            <button className="flex w-full items-center justify-center gap-3 rounded-xl border border-nexus-border py-3 hover:bg-nexus-surface-hover">
+            <button
+              type="button"
+              className="flex w-full items-center justify-center gap-3 rounded-xl border border-nexus-border bg-nexus-surface text-nexus-text py-3 hover:bg-nexus-surface-hover transition"
+            >
               <Facebook size={20} />
               Continue with Facebook
             </button>
 
-            <button className="flex w-full items-center justify-center gap-3 rounded-xl border border-nexus-border py-3 hover:bg-nexus-surface-hover">
+            <button
+              type="button"
+              className="flex w-full items-center justify-center gap-3 rounded-xl border border-nexus-border bg-nexus-surface text-nexus-text py-3 hover:bg-nexus-surface-hover transition"
+            >
               <Apple size={20} />
               Continue with Apple
             </button>

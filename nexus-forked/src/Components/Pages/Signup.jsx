@@ -16,9 +16,7 @@ export default function SignupPage() {
 
   const [usernameAvailable, setUsernameAvailable] = useState(false);
 
-  const usernameAvailability = async (e) => {
-    const username = e.target.value;
-
+  const usernameAvailability = async (username) => {
     if (!username.trim()) {
       setUsernameAvailable(false);
       return;
@@ -56,6 +54,7 @@ export default function SignupPage() {
 
   const handleSignup = async (e) => {
     e.preventDefault();
+
     try {
       const response = await fetch(`${import.meta.env.VITE_BASE_URL}/signup`, {
         method: "POST",
@@ -70,6 +69,7 @@ export default function SignupPage() {
       });
 
       const data = await response.json();
+
       if (response.ok) {
         alert(data.message);
         navigate("/login");
@@ -83,11 +83,11 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-nexus-bg px-4 py-8">
-      <div className="w-full max-w-md rounded-3xl bg-nexus-surface/80 backdrop-blur-xl shadow-2xl border border-nexus-border p-8">
+      <div className="w-full max-w-md rounded-3xl bg-nexus-surface border border-nexus-border p-8 shadow-2xl">
         {/* Logo */}
         <div className="flex flex-col items-center">
           <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-nexus-primary via-nexus-secondary to-nexus-accent flex items-center justify-center shadow-lg">
-            <Camera className="text-nexus-text" size={30} />
+            <Camera className="text-white" size={30} />
           </div>
 
           <h1 className="mt-5 text-3xl font-bold text-nexus-text">
@@ -108,7 +108,10 @@ export default function SignupPage() {
               className="h-24 w-24 rounded-full object-cover ring-4 ring-nexus-primary/20"
             />
 
-            <button className="absolute bottom-0 right-0 h-9 w-9 rounded-full bg-gradient-to-r from-nexus-primary to-nexus-secondary flex items-center justify-center shadow-lg text-nexus-text hover:scale-105 transition">
+            <button
+              type="button"
+              className="absolute bottom-0 right-0 h-9 w-9 rounded-full bg-gradient-to-r from-nexus-primary to-nexus-secondary flex items-center justify-center shadow-lg text-white hover:scale-105 transition"
+            >
               <Camera size={18} />
             </button>
           </div>
@@ -121,6 +124,7 @@ export default function SignupPage() {
               size={18}
               className="absolute left-4 top-1/2 -translate-y-1/2 text-nexus-text-muted"
             />
+
             <input
               type="text"
               value={Username}
@@ -130,18 +134,18 @@ export default function SignupPage() {
                   .replace(/ /g, "_");
 
                 setUsername(username);
-                usernameAvailability(e);
+                usernameAvailability(username);
               }}
               placeholder="Username"
-              className="w-full rounded-xl border border-nexus-border bg-nexus-surface py-3 pl-11 pr-4 outline-none focus:ring-2 focus:ring-nexus-primary"
+              className="w-full rounded-xl border border-nexus-border bg-nexus-surface text-nexus-text placeholder:text-nexus-text-muted py-3 pl-11 pr-11 outline-none focus:ring-2 focus:ring-nexus-primary"
             />
 
-            <p className="absolute right-4 top-1/2 -translate-y-1/2 text-nexus-text-muted hover:text-nexus-text">
+            <p className="absolute right-4 top-1/2 -translate-y-1/2">
               {usernameAvailable === false ? (
                 <X size={18} className="text-nexus-error" />
-              ) : (
+              ) : usernameAvailable === true ? (
                 <Check size={18} className="text-nexus-success" />
-              )}
+              ) : null}
             </p>
           </div>
 
@@ -150,12 +154,13 @@ export default function SignupPage() {
               size={18}
               className="absolute left-4 top-1/2 -translate-y-1/2 text-nexus-text-muted"
             />
+
             <input
               type="email"
               value={Email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email address"
-              className="w-full rounded-xl border border-nexus-border bg-nexus-surface py-3 pl-11 pr-4 outline-none focus:ring-2 focus:ring-nexus-primary"
+              className="w-full rounded-xl border border-nexus-border bg-nexus-surface text-nexus-text placeholder:text-nexus-text-muted py-3 pl-11 pr-4 outline-none focus:ring-2 focus:ring-nexus-primary"
             />
           </div>
 
@@ -170,7 +175,7 @@ export default function SignupPage() {
               placeholder="Password"
               value={Password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-xl border border-nexus-border bg-nexus-surface py-3 pl-11 pr-12 outline-none focus:ring-2 focus:ring-nexus-primary"
+              className="w-full rounded-xl border border-nexus-border bg-nexus-surface text-nexus-text placeholder:text-nexus-text-muted py-3 pl-11 pr-12 outline-none focus:ring-2 focus:ring-nexus-primary"
             />
 
             <button
@@ -194,7 +199,7 @@ export default function SignupPage() {
               value={ConfirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="Confirm password"
-              className="w-full rounded-xl border border-nexus-border bg-nexus-surface py-3 pl-11 pr-12 outline-none focus:ring-2 focus:ring-nexus-primary"
+              className="w-full rounded-xl border border-nexus-border bg-nexus-surface text-nexus-text placeholder:text-nexus-text-muted py-3 pl-11 pr-12 outline-none focus:ring-2 focus:ring-nexus-primary"
             />
 
             <button
@@ -207,13 +212,14 @@ export default function SignupPage() {
 
             {error && (
               <p className="text-nexus-error absolute text-sm left-2">
-                password don't match
+                Passwords don't match
               </p>
             )}
           </div>
 
           <label className="flex items-start gap-3 text-sm text-nexus-text-secondary pt-4">
             <input type="checkbox" className="mt-1 accent-nexus-primary" />
+
             <span>
               I agree to the{" "}
               <button
@@ -236,8 +242,8 @@ export default function SignupPage() {
             type="button"
             disabled={disable}
             onClick={(e) => handleSignup(e)}
-            className={`w-full rounded-xl bg-gradient-to-r from-nexus-primary via-nexus-secondary to-nexus-accent py-3 font-semibold text-nexus-text shadow-lg hover:opacity-90 transition ${
-              disable ? "cursor-not-allowed " : "cursor-pointer"
+            className={`w-full rounded-xl bg-gradient-to-r from-nexus-primary via-nexus-secondary to-nexus-accent py-3 font-semibold text-white shadow-lg hover:opacity-90 transition ${
+              disable ? "cursor-not-allowed opacity-60" : "cursor-pointer"
             }`}
           >
             Create Account
@@ -250,14 +256,17 @@ export default function SignupPage() {
           <div className="h-px flex-1 bg-nexus-border" />
         </div>
 
-        <button className="w-full rounded-xl border border-nexus-border py-3 font-medium hover:bg-nexus-surface-hover transition">
+        <button
+          type="button"
+          className="w-full rounded-xl border border-nexus-border bg-nexus-surface text-nexus-text py-3 font-medium hover:bg-nexus-surface-hover transition"
+        >
           Continue with Google
         </button>
 
         <p className="mt-8 text-center text-sm text-nexus-text-secondary">
           Already have an account?
           <a
-            href="login"
+            href="/login"
             className="ml-2 font-semibold text-nexus-primary hover:underline"
           >
             Sign in

@@ -17,41 +17,74 @@
   /* Text */
   --nexus-text: #18181b;
   --nexus-text-secondary: #475569;
-  --nexus-text-muted: #94a3b8;
+  --nexus-text-muted: #64748b;
 
   /* Border */
   --nexus-border: #e2e8f0;
 
   /* Status */
-  --nexus-success: #22c55e;
-  --nexus-error: #ef4444;
+  --nexus-success: #16a34a;
+  --nexus-error: #dc2626;
   --nexus-like: #f43f5e;
+
+  color-scheme: light;
 }
 
 .dark {
+  /* Background */
   --nexus-bg: #09090b;
   --nexus-surface: #18181b;
   --nexus-surface-hover: #27272a;
 
+  /* Brand */
   --nexus-primary: #a78bfa;
   --nexus-primary-hover: #8b5cf6;
   --nexus-secondary: #f472b6;
-  --nexus-accent: #6366f1;
+  --nexus-accent: #818cf8;
 
+  /* Text */
   --nexus-text: #f4f4f5;
-  --nexus-text-secondary: #a1a1aa;
-  --nexus-text-muted: #71717a;
+  --nexus-text-secondary: #d4d4d8;
+  --nexus-text-muted: #a1a1aa;
 
+  /* Border */
   --nexus-border: #3f3f46;
 
+  /* Status */
   --nexus-success: #4ade80;
   --nexus-error: #f87171;
   --nexus-like: #fb7185;
+
+  color-scheme: dark;
+}
+
+html {
+  background-color: var(--nexus-bg);
 }
 
 body {
   background-color: var(--nexus-bg);
   color: var(--nexus-text);
+}
+
+/* Form controls inherit the active theme */
+input,
+textarea,
+select,
+button {
+  font: inherit;
+}
+
+input,
+textarea,
+select {
+  color: var(--nexus-text);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--nexus-text-muted);
+  opacity: 1;
 }
 
 /* Fallback utility classes */
@@ -77,6 +110,22 @@ body {
 
 .text-nexus-text-muted {
   color: var(--nexus-text-muted);
+}
+
+.text-nexus-primary {
+  color: var(--nexus-primary);
+}
+
+.text-nexus-success {
+  color: var(--nexus-success);
+}
+
+.text-nexus-error {
+  color: var(--nexus-error);
+}
+
+.text-nexus-like {
+  color: var(--nexus-like);
 }
 
 .border-nexus-border {
