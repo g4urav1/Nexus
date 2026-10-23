@@ -1,0 +1,477 @@
+import express from "express";
+import User from "../models/User.js";
+import Posts from "../models/Post.js";
+import Conversation from "../models/Conversation.js";
+import Message from "../models/Message.js";
+
+import { authenticate } from "../middleware/auth.js";
+
+const router = express.Router();
+
+const peer = {};
+
+router.post("/connect/peer", authenticate, async (req, res) => {
+  const { peerId } = req.body;
+  const userId = req.userId;
+
+  peer[userId] = peerId;
+
+  // console.log(peer);
+});
+
+router.post("/follow", authenticate, async (req, res) => {
+  try {
+    const admin = await User.findById(req.userId);
+
+    const id = req.body.UserId;
+
+    const profileUser = await User.findById(id);
+
+    if (!admin) {
+      return res.status(404).json({
+        message: "Logged-in user not found",
+      });
+    }
+
+    if (!profileUser) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    const alreadyFollowed = admin.Following.some(
+      (followingUserId) =>
+        followingUserId.toString() === profileUser._id.toString(),
+    );
+
+    if (alreadyFollowed) {
+      admin.Following = admin.Following.filter(
+        (followingUserId) =>
+          followingUserId.toString() !== profileUser._id.toString(),
+      );
+
+      admin.FollowingCount = Math.max(0, admin.FollowingCount - 1);
+
+      profileUser.Followers = profileUser.Followers.filter(
+        (followerId) => followerId.toString() !== admin._id.toString(),
+      );
+
+      profileUser.FollowersCount = Math.max(0, profileUser.FollowersCount - 1);
+
+      await admin.save();
+      await profileUser.save();
+
+      await User.findByIdAndUpdate(profileUser._id, {
+        $pull: {
+          Notifications: {
+            type: "Follow",
+            by: admin._id,
+          },
+        },
+      });
+
+      console.log("UNFOLLOWED");
+
+      return res.status(200).json({
+        message: "User UnFollowed",
+        isFollowing: false,
+        Followers: profileUser.Followers,
+        FollowersCount: profileUser.FollowersCount,
+      });
+    }
+
+    // FOLLOW
+    admin.Following.push(profileUser._id);
+    admin.FollowingCount += 1;
+
+    profileUser.Followers.push(admin._id);
+    profileUser.FollowersCount += 1;
+
+    await admin.save();
+    await profileUser.save();
+
+    await User.findByIdAndUpdate(profileUser._id, {
+      $push: {
+        Notifications: {
+          message: "Followed You.",
+          sentAt: new Date(),
+          by: admin._id,
+        },
+      },
+    });
+
+    console.log("FOLLOWED");
+
+    return res.status(200).json({
+      message: "User Followed",
+      isFollowing: true,
+      Followers: profileUser.Followers,
+      FollowersCount: profileUser.FollowersCount,
+    });
+  } catch (error) {
+    console.error("FOLLOW ERROR:", error);
+
+    return res.status(500).json({
+      message: "Something went wrong",
+    });
+  }
+});
+
+router.get("/notifications", authenticate, async (req, res) => {
+  try {
+    const admin = await User.findById(req.userId);
+
+    if (!admin) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    const result = [];
+
+    for (let i = 0; i < admin.Notifications.length; i++) {
+      const by = await User.findById(admin.Notifications[i].by);
+
+      const post = admin.Notifications[i].postId
+        ? await Posts.findById(admin.Notifications[i].postId)
+        : null;
+
+      result.push({
+        id: admin.Notifications[i]._id,
+        NotificationBy: by ? by.Username : null,
+        NotificationMessage: admin.Notifications[i].message,
+        sentAt: admin.Notifications[i].sentAt,
+        byPfp: by ? by.Pfp : null,
+        postUrl: post ? post.Url : null,
+      });
+    }
+
+    return res.status(200).json(result.reverse());
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({
+      message: "something went wrong",
+    });
+  }
+});
+
+router.get("/conversations", authenticate, async (req, res) => {
+  try {
+    const conversations = await Conversation.find({
+      participants: req.userId,
+    }).populate("participants", "Username Pfp");
+
+    const result = conversations.map((conversation) => {
+      const otherUsers = conversation.participants.filter(
+        (user) => user._id.toString() !== req.userId.toString(),
+      );
+
+      return {
+        conversationId: conversation._id,
+        participants: otherUsers.map((user) => ({
+          pfp: user.Pfp || "",
+          Username: user.Username || "Unknown User",
+        })),
+      };
+    });
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      message: "Failed to fetch conversations",
+    });
+  }
+});
+
+router.get("/messages/:conversationId", async (req, res) => {
+  try {
+    const { conversationId } = req.params;
+
+    const limit = 10;
+    const skip = Number(req.query.skip) || 0;
+
+    const messages = await Message.find({
+      conversation_id: conversationId,
+    })
+      .sort({ created_at: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    res.status(200).json(messages.reverse());
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Failed to fetch messages",
+    });
+  }
+});
+
+router.post("/sendMessages/:conversationId", authenticate, async (req, res) => {
+  try {
+    const { conversationId } = req.params;
+    const { content } = req.body;
+
+    const io = req.app.get("io");
+    const sender = await User.findById(req.userId);
+    const Username = sender.Username;
+
+    const message = await Message.create({
+      user_id: req.userId,
+      content: content,
+      conversation_id: conversationId,
+      created_at: Date.now(),
+    });
+
+    io.to(`conversation:${conversationId}`).emit("RefreshMsg", {
+      message,
+      Username,
+    });
+
+    return res.status(200).json({
+      message: "sent",
+      data: message,
+    });
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({
+      message: "Failed to send message",
+    });
+  }
+});
+
+router.post("/call/:conversationId", authenticate, async (req, res) => {
+  try {
+    const { conversationId } = req.params;
+
+    const conversation = await Conversation.findById(conversationId);
+
+    if (!conversation) {
+      return res.status(404).json({
+        message: "Conversation not found",
+      });
+    }
+
+    const caller = await User.findById(req.userId);
+
+    if (!caller) {
+      return res.status(404).json({
+        message: "Caller not found",
+      });
+    }
+
+    const receiverId = conversation.participants.find(
+      (userId) => userId.toString() !== req.userId.toString(),
+    );
+
+    if (!receiverId) {
+      return res.status(400).json({
+        message: "Receiver not found",
+      });
+    }
+
+    const receiver = await User.findById(receiverId);
+
+    if (!receiver) {
+      return res.status(404).json({
+        message: "Receiver user not found",
+      });
+    }
+
+    receiver.CallStatus = "incoming";
+    receiver.isCamOn = true;
+    caller.CallStatus = "Calling";
+    caller.isCamOn = true;
+    conversation.Caller = caller._id;
+    conversation.Receiver = receiver._id;
+
+    await caller.save();
+    await receiver.save();
+    await conversation.save();
+
+    const callerDetails = await User.findById(conversation.Caller).select(
+      "_id Username Pfp CallStatus ",
+    );
+
+    const receiverDetails = await User.findById(conversation.Receiver).select(
+      "_id Username Pfp CallStatus ",
+    );
+
+    const io = req.app.get("io");
+
+    console.log("--------------------------------------------");
+    console.log("Caller id: ", callerDetails._id);
+    console.log("Rceiver Id: ", receiverDetails._id);
+    console.log(peer);
+    console.log("-----------------------------------------------");
+
+    io.to(`conversation:${conversationId}`).emit("GetCall", {
+      conversationId,
+
+      caller: {
+        _id: callerDetails._id,
+        Username: callerDetails.Username,
+        Pfp: callerDetails.Pfp || "",
+        CallStatus: callerDetails.CallStatus,
+      },
+
+      receiver: {
+        _id: receiverDetails._id,
+        Username: receiverDetails.Username,
+        Pfp: receiverDetails.Pfp || "",
+        CallStatus: receiverDetails.CallStatus,
+      },
+    });
+
+    console.log(
+      "############################ call initiated ###############3",
+      Date.now().toString(),
+    );
+
+    return res.status(200).json({
+      callerDetails,
+      receiverDetails,
+    });
+  } catch (error) {
+    console.error("CALL ERROR:", error);
+
+    return res.status(500).json({
+      message: "Failed to start call",
+      error: error.message,
+    });
+  }
+});
+
+router.get("/call/:conversationId", authenticate, async (req, res) => {
+  try {
+    const { conversationId } = req.params;
+
+    const conversation = await Conversation.findById(conversationId)
+      .populate("Caller", "_id Username Pfp CallStatus isCamOn")
+      .populate("Receiver", "_id Username Pfp CallStatus isCamOn");
+
+    if (!conversation) {
+      return res.status(404).json({
+        message: "Conversation not found",
+      });
+    }
+
+    return res.status(200).json({
+      conversationId,
+
+      callerDetails: conversation.Caller
+        ? {
+            _id: conversation.Caller._id,
+            Username: conversation.Caller.Username,
+            Pfp: conversation.Caller.Pfp || "",
+            CallStatus: conversation.Caller.CallStatus,
+            isCamOn: conversation.Caller.isCamOn,
+          }
+        : null,
+
+      receiverDetails: conversation.Receiver
+        ? {
+            _id: conversation.Receiver._id,
+            Username: conversation.Receiver.Username,
+            Pfp: conversation.Receiver.Pfp || "",
+            CallStatus: conversation.Receiver.CallStatus,
+            isCamOn: conversation.Receiver.isCamOn,
+          }
+        : null,
+    });
+  } catch (error) {
+    console.error("GET CALL ERROR:", error);
+
+    return res.status(500).json({
+      message: "Failed to get call details",
+      error: error.message,
+    });
+  }
+});
+
+router.post("/call/:conversationId/status", authenticate, async (req, res) => {
+  try {
+    const { conversationId } = req.params;
+    const { status } = req.body;
+
+    const conversation = await Conversation.findById(conversationId)
+      .populate("Caller", "_id Username Pfp CallStatus isCamOn ")
+      .populate("Receiver", "_id Username Pfp CallStatus isCamOn ");
+
+    if (!conversation) {
+      return res.status(404).json({
+        message: "Conversation not found",
+      });
+    }
+    const io = req.app.get("io");
+
+    if (status === "ended" || status === "OnCall") {
+      io.to(`conversation:${conversationId}`).emit("updateStatus", {
+        conversationId,
+
+        status,
+      });
+    }
+    return res.status(200).json({
+      message: "updated",
+    });
+  } catch (error) {
+    console.error("UPDATE CALL STATUS ERROR:", error);
+
+    return res.status(500).json({
+      message: "Failed to update call status",
+      error: error.message,
+    });
+  }
+});
+
+router.post(
+  "/call/:conversationId/sendPeer",
+  authenticate,
+  async (req, res) => {
+    try {
+      const { conversationId } = req.params;
+      const { peer } = req.body;
+      const adminId = req.userId;
+
+      console.log("PEER:", peer);
+      console.log("SENDER:", adminId);
+
+      const conversation = await Conversation.findById(conversationId);
+
+      if (!conversation) {
+        return res.status(404).json({
+          message: "Conversation not found",
+        });
+      }
+
+      const io = req.app.get("io");
+
+      const isCaller = conversation.Caller.toString() === adminId.toString();
+
+      io.to(`conversation:${conversationId}`).emit("sendPeer", {
+        peer,
+        senderId: adminId.toString(),
+        role: isCaller ? "caller" : "receiver",
+        conversationId,
+      });
+
+      return res.status(200).json({
+        message: "Peer sent successfully",
+      });
+    } catch (error) {
+      console.error("Send Peer:", error);
+
+      return res.status(500).json({
+        message: "Failed to send peer",
+        error: error.message,
+      });
+    }
+  },
+);
+
+export default router;
