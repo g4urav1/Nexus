@@ -1,3 +1,4 @@
+
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AuthPages from "./Components/Pages/Auth";
 import FeedPage from "./Components/Pages/Home";
@@ -13,7 +14,6 @@ import EditPage from "./Components/Pages/Edit";
 import CreatePostPage from "./Components/Pages/CreatePost";
 import Post from "./Components/Pages/Post";
 import { useEffect, useMemo, useState } from "react";
-
 import { Peer } from "peerjs";
 
 import {
@@ -28,6 +28,7 @@ import {
   PeerContext,
   ThemeContext,
 } from "./Components/context/context";
+
 import NotificationPage from "./Components/Pages/Notification";
 import FollowersPage from "./Components/Pages/Followers";
 import FollowingPage from "./Components/Pages/Following";
@@ -55,9 +56,9 @@ export default function App() {
   const [remotePeerId, setRemotePeerId] = useState("");
   const [remoteStream, setRemoteStream] = useState(null);
 
-  const [darkMode, setDarkMode] = useState(() => {
-    return localStorage.getItem("darkMode") === "true";
-  });
+  const [darkMode, setDarkMode] = useState(
+    () => localStorage.getItem("darkMode") === "true",
+  );
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", darkMode);
@@ -65,14 +66,17 @@ export default function App() {
   }, [darkMode]);
 
   useEffect(() => {
-    (() => {
-      const socket = io(import.meta.env.VITE_BASE_URL, {
-        withCredentials: true,
-      });
-      setSocket(socket);
-      // socket.on("welcome", (data) => alert(data));
-      socket.on("randomRouteHit", (data) => console.log(data));
-    })();
+    const socketConnection = io(import.meta.env.VITE_BASE_URL, {
+      withCredentials: true,
+    });
+
+    setSocket(socketConnection);
+
+    socketConnection.on("randomRouteHit", (data) => console.log(data));
+
+    return () => {
+      socketConnection.disconnect();
+    };
   }, []);
 
   useEffect(() => {
@@ -80,36 +84,37 @@ export default function App() {
   }, [localStream]);
 
   useEffect(() => {
-    const peer = new Peer();
-    setPeer(peer);
+    const newPeer = new Peer();
 
-    peer.on("open", (id) => {
+    setPeer(newPeer);
+
+    newPeer.on("open", async (id) => {
       console.log("Peer id: ", id);
       setPeerId(id);
 
-      (async () => {
-        try {
-          let response = await fetch(
-            `${import.meta.env.VITE_BASE_URL}/connect/peer`,
-            {
-              body: JSON.stringify({ peerId: id }),
-              method: "POST",
-              headers: { "content-type": "application/json" },
-              credentials: "include",
-            },
-          );
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_BASE_URL}/connect/peer`,
+          {
+            body: JSON.stringify({ peerId: id }),
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            credentials: "include",
+          },
+        );
 
-          if (!response.ok) throw new Error("Something went wrong!");
-
-          console.log("Peer connected!");
-        } catch (error) {
-          console.log(error);
+        if (!response.ok) {
+          throw new Error("Something went wrong!");
         }
-      })();
+
+        console.log("Peer connected!");
+      } catch (error) {
+        console.log(error);
+      }
     });
 
     return () => {
-      peer.destroy();
+      newPeer.destroy();
     };
   }, []);
 
@@ -120,13 +125,14 @@ export default function App() {
       console.log("OutGoing call: ", localStream);
       call.answer(localStream);
 
-      call.on("stream", (remoteStream) => {
-        console.log("Receiving remote stream: ", remoteStream);
-        setRemoteStream(remoteStream);
+      call.on("stream", (incomingRemoteStream) => {
+        console.log("Receiving remote stream: ", incomingRemoteStream);
+        setRemoteStream(incomingRemoteStream);
       });
     };
 
     peer.on("call", handleOutGoingCall);
+
     return () => {
       peer.off("call", handleOutGoingCall);
     };
@@ -137,21 +143,24 @@ export default function App() {
 
     const handleSendPeer = (data) => {
       if (String(adminId) === String(data.senderId)) return;
+
       console.log("Received remote peer:", data.peer);
       console.log("Making call", localStream, data.peer);
 
       if (localStream && peer) {
         const call = peer.call(data.peer, localStream);
 
-        call.on("stream", (remoteStream) => {
+        call.on("stream", (incomingRemoteStream) => {
           console.log("remote stream received!");
-          setRemoteStream(remoteStream);
+          setRemoteStream(incomingRemoteStream);
         });
       }
+
       setRemotePeerId(data.peer);
     };
 
     socket.on("sendPeer", handleSendPeer);
+
     return () => socket.off("sendPeer", handleSendPeer);
   }, [socket, adminId, localStream, peer]);
 
@@ -161,6 +170,7 @@ export default function App() {
     if (localStream) {
       localStream.getTracks().forEach((track) => track.stop());
     }
+
     setLocalStream(null);
     setRemoteStream(null);
   }, [callStatus]);
@@ -205,35 +215,74 @@ export default function App() {
   );
 
   const loadUser = async () => {
+    const publicPaths = [
+      "/login",
+      "/forget-password",
+      "/signup",
+      "/reset-password",
+    ];
+
     try {
-      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/admin`, {
-        credentials: "include",
-      });
-      const data = await response.json();
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/admin`,
+        {
+          credentials: "include",
+        },
+      );
+
       if (!response.ok) {
-        window.location.href = "/login";
+        setAdmin("");
+        setUserPosts([]);
+
+        if (!publicPaths.includes(window.location.pathname)) {
+          window.location.replace("/login");
+        }
+
+        return;
       }
+
+      const data = await response.json();
+
+      if (!data.admin) {
+        setAdmin("");
+        setUserPosts([]);
+
+        if (!publicPaths.includes(window.location.pathname)) {
+          window.location.replace("/login");
+        }
+
+        return;
+      }
+
       setAdmin(data.admin);
-      setUserPosts(data.UserPosts);
+      setUserPosts(data.UserPosts ?? []);
     } catch (error) {
-      console.error(error);
+      console.error("Failed to load user:", error);
+
+      setAdmin("");
+      setUserPosts([]);
+
+      if (!publicPaths.includes(window.location.pathname)) {
+        window.location.replace("/login");
+      }
     }
   };
 
   useEffect(() => {
-    if (
-      window.location.pathname !== "/login" &&
-      window.location.pathname !== "/forget-password" &&
-      window.location.pathname !== "/signup"
-    ) {
+    const publicPaths = [
+      "/login",
+      "/forget-password",
+      "/signup",
+      "/reset-password",
+    ];
+
+    if (!publicPaths.includes(window.location.pathname)) {
       loadUser();
     }
   }, []);
 
   return (
-    <PeerContext.Provider
-      value={{ peerId, setPeerId, remotePeerId, setRemotePeerId }}
-    >
+    <PeerContext.Provider value={{ peerId, setPeerId, remotePeerId, setRemotePeerId }}>
       <CurrentCallContext.Provider value={{ currentCall, setCurrentCall }}>
         <ReceiverContext.Provider value={{ receiver, setReceiver }}>
           <CallerContext.Provider
