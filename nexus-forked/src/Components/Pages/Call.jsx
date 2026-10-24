@@ -197,12 +197,16 @@ export default function CallPage({ socket }) {
   useEffect(() => {
     if (!stream) return;
 
-    const videoTrack = stream.getVideoTracks()[0];
+    const videoTracks = stream.getVideoTracks();
 
-    if (videoTrack) {
-      videoTrack.enabled = camOn;
+    if (callStatus === "ended" || !camOn) {
+      videoTracks.forEach((track) => track.stop());
+    } else {
+      videoTracks.forEach((track) => {
+        track.enabled = true;
+      });
     }
-  }, [stream, camOn]);
+  }, [stream, camOn, callStatus]);
 
   const updateCallStatus = async (status) => {
     try {
@@ -293,7 +297,10 @@ export default function CallPage({ socket }) {
                     {callUser && (
                       <>
                         <img
-                          src={callUser.Pfp || ""}
+                          src={
+                            callUser.Pfp ||
+                            "https://i.pinimg.com/736x/02/59/54/0259543779b1c2db9ba9d62d47e11880.jpg"
+                          }
                           alt={callUser.Username || "User"}
                           className="h-24 w-24 rounded-full object-cover ring-4 ring-nexus-primary/30 shadow-2xl sm:h-28 sm:w-28 md:h-32 md:w-32"
                         />
