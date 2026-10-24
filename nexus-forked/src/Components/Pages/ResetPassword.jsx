@@ -2,11 +2,13 @@ import { FaInstagram as Instagram } from "react-icons/fa";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ButtonSpinner from "../Individual/ButtonSpinner";
 
 export default function ForgetPasswordPage() {
   const [showPassword, setShowPassword] = useState(false);
 
   const [Password, setPassword] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const [UserName, setUserName] = useState("");
   const navigate = useNavigate();
@@ -16,6 +18,7 @@ export default function ForgetPasswordPage() {
   }, [UserName]);
 
   const changePassword = async () => {
+    setSubmitting(true);
     try {
       const response = await fetch(
         `${import.meta.env.VITE_BASE_URL}/changePassword`,
@@ -41,6 +44,8 @@ export default function ForgetPasswordPage() {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -140,12 +145,15 @@ export default function ForgetPasswordPage() {
 
             <button
               type="button"
+              disabled={submitting}
+              aria-busy={submitting}
+              aria-label={submitting ? "Changing password" : undefined}
               onClick={() => {
                 changePassword();
               }}
-              className="w-full rounded-xl bg-gradient-to-r from-nexus-primary to-nexus-secondary py-3 font-semibold text-nexus-text transition hover:scale-[1.02] active:scale-95 cursor-pointer"
+              className="w-full flex items-center justify-center rounded-xl bg-gradient-to-r from-nexus-primary to-nexus-secondary py-3 font-semibold text-nexus-text transition hover:scale-[1.02] active:scale-95 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Change
+              {submitting ? <ButtonSpinner /> : "Change"}
             </button>
           </form>
 

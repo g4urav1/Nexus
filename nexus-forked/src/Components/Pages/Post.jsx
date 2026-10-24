@@ -9,6 +9,7 @@ import DesktopNav from "../Individual/DesktopNav";
 import MobileMenu from "../Individual/MobileMenu";
 
 import { AdminContext } from "../context/context";
+import ButtonSpinner from "../Individual/ButtonSpinner";
 
 export default function Post({ socket }) {
   const { id } = useParams();
@@ -499,9 +500,11 @@ export default function Post({ socket }) {
                 <button
                   type="submit"
                   disabled={!commentText.trim() || commentLoading}
+                  aria-busy={commentLoading}
+                  aria-label={commentLoading ? "Sending comment" : "Send comment"}
                   className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-nexus-primary text-nexus-text transition hover:bg-nexus-primary-hover disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
                 >
-                  <Send size={15} />
+                  {commentLoading ? <ButtonSpinner /> : <Send size={15} />}
                 </button>
               </form>
             </article>

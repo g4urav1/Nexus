@@ -3,6 +3,7 @@ import DesktopNav from "../Individual/DesktopNav";
 import MobileMenu from "../Individual/MobileMenu";
 import { AdminContext } from "../context/context";
 import { Heart } from "lucide-react";
+import ButtonSpinner from "../Individual/ButtonSpinner";
 
 export default function FeedPage({ socket }) {
   const { admin } = useContext(AdminContext);
@@ -235,11 +236,13 @@ export default function FeedPage({ socket }) {
                   onClick={() => {
                     handleCreatePost();
                   }}
-                  disabled={!Caption.trim() || !NewPost}
-                  className="rounded-xl bg-nexus-primary px-5 py-2 text-xs font-semibold tracking-wider text-nexus-text uppercase shadow-md shadow-nexus-primary/20 transition-all hover:bg-nexus-primary-hover active:scale-95 disabled:opacity-40"
+                  disabled={!Caption.trim() || !NewPost || sending}
+                  aria-busy={sending}
+                  aria-label={sending ? "Creating post" : undefined}
+                  className="flex min-w-[72px] items-center justify-center rounded-xl bg-nexus-primary px-5 py-2 text-xs font-semibold tracking-wider text-nexus-text uppercase shadow-md shadow-nexus-primary/20 transition-all hover:bg-nexus-primary-hover active:scale-95 disabled:opacity-40"
                 >
                   {sending ? (
-                    <div className="h-5 w-5 animate-spin rounded-full border-l-[2px] border-b-[1.5px] border-r-[1px] border-nexus-text border-t-transparent"></div>
+                    <ButtonSpinner />
                   ) : (
                     "Post"
                   )}

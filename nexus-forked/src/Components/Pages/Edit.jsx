@@ -3,18 +3,23 @@ import DesktopNav from "../Individual/DesktopNav";
 import MobileMenu from "../Individual/MobileMenu";
 import { ArrowLeft, Mail, Text, User2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import ButtonSpinner from "../Individual/ButtonSpinner";
 
 export default function EditPage() {
   const [Username, setUsername] = useState("");
   const [Bio, setBio] = useState("");
   const [Pfp, setPfp] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const handleChange = async () => {
+    if (submitting) return;
+
     const formData = new FormData();
     formData.append("Pfp", Pfp);
     formData.append("Username", Username);
     formData.append("Bio", Bio);
 
+    setSubmitting(true);
     try {
       const response = await fetch(
         `${import.meta.env.VITE_BASE_URL}/edit_profile`,
@@ -28,6 +33,8 @@ export default function EditPage() {
       const data = await response.json();
     } catch (error) {
       console.log(error);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -102,12 +109,15 @@ export default function EditPage() {
 
               <button
                 type="button"
+                disabled={submitting}
+                aria-busy={submitting}
+                aria-label={submitting ? "Updating profile" : undefined}
                 onClick={() => {
                   handleChange();
                 }}
-                className="w-full rounded-xl bg-nexus-primary py-3 font-semibold text-nexus-text transition hover:bg-nexus-primary-hover hover:scale-[1.02] active:scale-95"
+                className="flex w-full items-center justify-center rounded-xl bg-nexus-primary py-3 font-semibold text-nexus-text transition hover:bg-nexus-primary-hover hover:scale-[1.02] active:scale-95 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                Update
+                {submitting ? <ButtonSpinner /> : "Update"}
               </button>
             </form>
           </main>

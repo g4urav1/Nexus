@@ -2,11 +2,13 @@ import { FaInstagram as Instagram } from "react-icons/fa";
 import { Mail, Key } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ButtonSpinner from "../Individual/ButtonSpinner";
 
 export default function ForgetPasswordPage() {
   const [btnDisable, setBtnDisable] = useState(true);
   const [codeDisable, setCodeDisable] = useState(false);
   const [sending, setSending] = useState(false);
+  const [verifying, setVerifying] = useState(false);
 
   const [UserName, setUserName] = useState("");
   const [Code, setCode] = useState("");
@@ -59,6 +61,7 @@ export default function ForgetPasswordPage() {
   };
 
   const verifyCode = async () => {
+    setVerifying(true);
     try {
       const response = await fetch(
         `${import.meta.env.VITE_BASE_URL}/verifyCode`,
@@ -84,6 +87,8 @@ export default function ForgetPasswordPage() {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setVerifying(false);
     }
   };
 
@@ -177,13 +182,15 @@ export default function ForgetPasswordPage() {
               <button
                 type="button"
                 disabled={sending}
+                aria-busy={sending}
+                aria-label={sending ? "Sending code" : undefined}
                 onClick={() => {
                   getCode();
                 }}
-                className={`w-full flex justify-center rounded-xl bg-nexus-primary py-3 font-semibold text-nexus-text transition hover:bg-nexus-primary-hover hover:scale-[1.02] active:scale-95 cursor-pointer`}
+                className={`w-full flex items-center justify-center rounded-xl bg-nexus-primary py-3 font-semibold text-nexus-text transition hover:bg-nexus-primary-hover hover:scale-[1.02] active:scale-95 cursor-pointer`}
               >
                 {sending ? (
-                  <div className="h-5 w-5 animate-spin rounded-full border-l-[2px] border-b-[1.5px] border-r-[1px] border-nexus-text border-t-transparent"></div>
+                  <ButtonSpinner />
                 ) : (
                   "Get Code"
                 )}
@@ -191,12 +198,15 @@ export default function ForgetPasswordPage() {
             ) : (
               <button
                 type="button"
+                disabled={verifying}
+                aria-busy={verifying}
+                aria-label={verifying ? "Verifying code" : undefined}
                 onClick={() => {
                   verifyCode();
                 }}
-                className={`w-full rounded-xl bg-nexus-primary py-3 font-semibold text-nexus-text transition hover:bg-nexus-primary-hover hover:scale-[1.02] active:scale-95 cursor-pointer`}
+                className={`w-full flex items-center justify-center rounded-xl bg-nexus-primary py-3 font-semibold text-nexus-text transition hover:bg-nexus-primary-hover hover:scale-[1.02] active:scale-95 cursor-pointer`}
               >
-                verify
+                {verifying ? <ButtonSpinner /> : "verify"}
               </button>
             )}
           </form>

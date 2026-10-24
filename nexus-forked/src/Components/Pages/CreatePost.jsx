@@ -3,13 +3,15 @@ import DesktopNav from "../Individual/DesktopNav";
 import MobileMenu from "../Individual/MobileMenu";
 import { ArrowLeft, Image, Text } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import ButtonSpinner from "../Individual/ButtonSpinner";
 
 export default function EditPage() {
   const [Post, setPost] = useState(null);
   const [Caption, setCaption] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async () => {
-    if (!Post) {
+    if (!Post || submitting) {
       return;
     }
 
@@ -17,6 +19,7 @@ export default function EditPage() {
     formData.append("image", Post);
     formData.append("caption", Caption);
 
+    setSubmitting(true);
     try {
       const response = await fetch(
         `${import.meta.env.VITE_BASE_URL}/uploadmain`,
@@ -36,6 +39,8 @@ export default function EditPage() {
     } catch (error) {
       alert("something went wrong");
       console.error(error);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -92,12 +97,15 @@ export default function EditPage() {
 
               <button
                 type="button"
+                disabled={!Post || submitting}
+                aria-busy={submitting}
+                aria-label={submitting ? "Creating post" : undefined}
                 onClick={() => {
                   handleSubmit();
                 }}
-                className="w-full rounded-xl bg-nexus-primary py-3 font-semibold text-nexus-text transition hover:bg-nexus-primary-hover hover:scale-[1.02] active:scale-95"
+                className="flex w-full items-center justify-center rounded-xl bg-nexus-primary py-3 font-semibold text-nexus-text transition hover:bg-nexus-primary-hover hover:scale-[1.02] active:scale-95 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                Post
+                {submitting ? <ButtonSpinner /> : "Post"}
               </button>
             </form>
           </main>

@@ -1,6 +1,7 @@
 import { Camera, Check, Eye, EyeOff, Lock, Mail, User, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ButtonSpinner from "../Individual/ButtonSpinner";
 
 export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -12,6 +13,7 @@ export default function SignupPage() {
   const [ConfirmPassword, setConfirmPassword] = useState("");
 
   const [disable, setDisable] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(false);
 
   const [usernameAvailable, setUsernameAvailable] = useState(false);
@@ -55,6 +57,8 @@ export default function SignupPage() {
   const handleSignup = async (e) => {
     e.preventDefault();
 
+    if (submitting) return;
+    setSubmitting(true);
     try {
       const response = await fetch(`${import.meta.env.VITE_BASE_URL}/signup`, {
         method: "POST",
@@ -78,6 +82,8 @@ export default function SignupPage() {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -240,13 +246,17 @@ export default function SignupPage() {
 
           <button
             type="button"
-            disabled={disable}
+            disabled={disable || submitting}
+            aria-busy={submitting}
+            aria-label={submitting ? "Creating account" : undefined}
             onClick={(e) => handleSignup(e)}
-            className={`w-full rounded-xl bg-gradient-to-r from-nexus-primary via-nexus-secondary to-nexus-accent py-3 font-semibold text-white shadow-lg hover:opacity-90 transition ${
-              disable ? "cursor-not-allowed opacity-60" : "cursor-pointer"
+            className={`flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-nexus-primary via-nexus-secondary to-nexus-accent py-3 font-semibold text-white shadow-lg hover:opacity-90 transition ${
+              disable || submitting
+                ? "cursor-not-allowed opacity-60"
+                : "cursor-pointer"
             }`}
           >
-            Create Account
+            {submitting ? <ButtonSpinner /> : "Create Account"}
           </button>
         </form>
 

@@ -7,9 +7,11 @@ import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AdminContext } from "../context/context";
+import ButtonSpinner from "../Individual/ButtonSpinner";
 
 export default function LoginPage() {
   const [disable, setDisable] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const [Email, setEmail] = useState("");
@@ -27,6 +29,7 @@ export default function LoginPage() {
   }, [Email, Password]);
 
   const handleLogin = async () => {
+    setSubmitting(true);
     try {
       const response = await fetch(`${import.meta.env.VITE_BASE_URL}/login`, {
         credentials: "include",
@@ -52,6 +55,8 @@ export default function LoginPage() {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -170,15 +175,19 @@ export default function LoginPage() {
 
             <button
               type="button"
-              disabled={disable}
+              disabled={disable || submitting}
+              aria-busy={submitting}
+              aria-label={submitting ? "Signing in" : undefined}
               onClick={() => {
                 handleLogin();
               }}
-              className={`w-full rounded-xl bg-nexus-primary py-3 font-semibold text-white transition hover:bg-nexus-primary-hover hover:scale-[1.02] active:scale-95 ${
-                disable ? "cursor-not-allowed opacity-60" : "cursor-pointer"
+              className={`flex w-full items-center justify-center rounded-xl bg-nexus-primary py-3 font-semibold text-white transition hover:bg-nexus-primary-hover hover:scale-[1.02] active:scale-95 ${
+                disable || submitting
+                  ? "cursor-not-allowed opacity-60"
+                  : "cursor-pointer"
               }`}
             >
-              Sign In
+              {submitting ? <ButtonSpinner /> : "Sign In"}
             </button>
           </form>
 
