@@ -197,16 +197,12 @@ export default function CallPage({ socket }) {
   useEffect(() => {
     if (!stream) return;
 
-    const videoTracks = stream.getVideoTracks();
+    const videoTrack = stream.getVideoTracks()[0];
 
-    if (callStatus === "ended" || !camOn) {
-      videoTracks.forEach((track) => track.stop());
-    } else {
-      videoTracks.forEach((track) => {
-        track.enabled = true;
-      });
+    if (videoTrack) {
+      videoTrack.enabled = camOn;
     }
-  }, [stream, camOn, callStatus]);
+  }, [stream, camOn]);
 
   const updateCallStatus = async (status) => {
     try {
@@ -297,17 +293,14 @@ export default function CallPage({ socket }) {
                     {callUser && (
                       <>
                         <img
-                          src={
-                            callUser?.Pfp ||
-                            "https://i.pinimg.com/736x/02/59/54/0259543779b1c2db9ba9d62d47e11880.jpg"
-                          }
-                          alt={callUser?.Username || "User"}
+                          src={callUser.Pfp || ""}
+                          alt={callUser.Username || "User"}
                           className="h-24 w-24 rounded-full object-cover ring-4 ring-nexus-primary/30 shadow-2xl sm:h-28 sm:w-28 md:h-32 md:w-32"
                         />
 
                         <div>
                           <h2 className="text-lg font-semibold text-nexus-text sm:text-xl">
-                            {callUser?.Username || "Unknown User"}
+                            {callUser.Username || "Unknown User"}
                           </h2>
 
                           <p className="mt-1 text-sm text-nexus-text-secondary">
@@ -331,10 +324,7 @@ export default function CallPage({ socket }) {
                     ) : (
                       <div className="flex h-full w-full items-center justify-center bg-nexus-surface">
                         <img
-                          src={
-                            admin?.Pfp ||
-                            "https://i.pinimg.com/736x/02/59/54/0259543779b1c2db9ba9d62d47e11880.jpg"
-                          }
+                          src={admin?.Pfp || ""}
                           alt={admin?.Username || "User"}
                           className="h-24 w-24 rounded-full object-cover ring-4 ring-nexus-primary/30 shadow-2xl sm:h-24 sm:w-24 md:h-30 md:w-30"
                         />
@@ -414,17 +404,14 @@ export default function CallPage({ socket }) {
                     {callUser && (
                       <>
                         <img
-                          src={
-                            callUser?.Pfp ||
-                            "https://i.pinimg.com/736x/02/59/54/0259543779b1c2db9ba9d62d47e11880.jpg"
-                          }
-                          alt={callUser?.Username || "User"}
+                          src={callUser.Pfp || ""}
+                          alt={callUser.Username || "User"}
                           className="h-24 w-24 rounded-full object-cover ring-4 ring-nexus-primary/30 shadow-2xl sm:h-28 sm:w-28 md:h-32 md:w-32"
                         />
 
                         <div>
                           <h2 className="text-lg font-semibold text-nexus-text sm:text-xl">
-                            {callUser?.Username || "Unknown User"}
+                            {callUser.Username || "Unknown User"}
                           </h2>
 
                           <p className="mt-1 text-sm text-nexus-text-secondary">
@@ -476,18 +463,15 @@ export default function CallPage({ socket }) {
                         ></video>
                       ) : (
                         <img
-                          src={
-                            callUser?.Pfp ||
-                            "https://i.pinimg.com/736x/02/59/54/0259543779b1c2db9ba9d62d47e11880.jpg"
-                          }
-                          alt={callUser?.Username || "User"}
+                          src={callUser.Pfp || ""}
+                          alt={callUser.Username || "User"}
                           className="h-28 w-28 rounded-full object-cover ring-4 ring-nexus-primary/30 shadow-2xl sm:h-32 sm:w-32 md:h-36 md:w-36"
                         />
                       )}
 
                       <div>
                         <h2 className="text-lg font-semibold text-nexus-text sm:text-xl">
-                          {callUser?.Username || "Unknown User"}
+                          {callUser.Username || "Unknown User"}
                         </h2>
 
                         <div className="mt-1 text-sm text-nexus-text-secondary">
@@ -514,10 +498,7 @@ export default function CallPage({ socket }) {
                     ) : (
                       <div className="flex h-full w-full items-center justify-center bg-nexus-surface">
                         <img
-                          src={
-                            admin?.Pfp ||
-                            "https://i.pinimg.com/736x/02/59/54/0259543779b1c2db9ba9d62d47e11880.jpg"
-                          }
+                          src={admin?.Pfp || ""}
                           alt={admin?.Username || "User"}
                           className="h-24 w-24 rounded-full object-cover ring-4 ring-nexus-primary/30 shadow-2xl sm:h-24 sm:w-24 md:h-30 md:w-30"
                         />
@@ -582,17 +563,14 @@ export default function CallPage({ socket }) {
                   {callUser && (
                     <div className="flex h-full w-full flex-col items-center justify-center gap-4 px-4 text-center">
                       <img
-                        src={
-                          callUser?.Pfp ||
-                          "https://i.pinimg.com/736x/02/59/54/0259543779b1c2db9ba9d62d47e11880.jpg"
-                        }
-                        alt={callUser?.Username || "User"}
+                        src={callUser.Pfp || ""}
+                        alt={callUser.Username || "User"}
                         className="h-24 w-24 rounded-full object-cover ring-4 ring-nexus-border sm:h-28 sm:w-28 md:h-32 md:w-32"
                       />
 
                       <div>
                         <h2 className="text-lg font-semibold text-nexus-text sm:text-xl">
-                          {callUser?.Username || "Unknown User"}
+                          {callUser.Username || "Unknown User"}
                         </h2>
 
                         <p className="mt-1 text-sm text-nexus-text-muted">
