@@ -16,7 +16,7 @@ router.post("/connect/peer", authenticate, async (req, res) => {
 
   peer[userId] = peerId;
 
-  // console.log(peer);
+  
 });
 
 router.post("/follow", authenticate, async (req, res) => {
