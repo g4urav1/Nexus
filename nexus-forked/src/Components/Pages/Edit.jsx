@@ -44,20 +44,22 @@ export default function EditPage() {
     <div>
       <div className="min-h-screen bg-nexus-bg text-nexus-text transition-colors duration-300">
         {/* APP CONTAINER */}
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-4 lg:gap-6 p-2 sm:p-4 lg:p-6 pb-20 md:pb-6">
+        <div className="max-w-7xl mx-auto flex min-h-screen flex-col md:flex-row gap-4 lg:gap-6 p-2 sm:p-4 lg:p-6 pb-20 md:pb-6">
           {/* ================= 1. DESKTOP SIDEBAR ================= */}
           <DesktopNav />
 
           {/* ================= 2. MAIN PROFILE CONTENT ================= */}
-          <main className="relative flex-1 min-w-0 bg-nexus-surface border border-nexus-border rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm flex justify-center items-center">
-            <div
+          <main className="relative flex min-h-[24rem] flex-1 items-center justify-center overflow-hidden rounded-2xl border border-nexus-border bg-nexus-surface px-4 py-16 shadow-sm sm:rounded-3xl sm:px-8 sm:py-20 md:h-[calc(100vh-2rem)] md:min-h-0 lg:h-[calc(100vh-3rem)]">
+            <button
+              type="button"
+              aria-label="Go back"
               onClick={() => navigate(-1)}
-              className="absolute z-10 top-10 left-10 cursor-pointer"
+              className="absolute left-4 top-4 z-10 cursor-pointer rounded-full p-2 text-nexus-text-muted transition hover:bg-nexus-surface-hover hover:text-nexus-text sm:left-6 sm:top-6"
             >
               <ArrowLeft />
-            </div>
+            </button>
 
-            <form className="space-y-5 w-1/2 mx-auto">
+            <form className="mx-auto w-full max-w-md space-y-5">
               <div className="relative">
                 <User2
                   size={18}
